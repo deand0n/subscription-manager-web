@@ -1,6 +1,6 @@
 import { Pool } from 'pg'
 import { Kysely, PostgresDialect } from 'kysely'
-import type { Database } from './database.types'
+import type { Database } from './src/lib/database.types'
 
 const dialect = new PostgresDialect({
     pool: new Pool({
@@ -13,12 +13,10 @@ const dialect = new PostgresDialect({
     })
 })
 
-// Database interface is passed to Kysely's constructor, and from now on, Kysely 
+// Database interface is passed to Kysely's constructor, and from now on, Kysely
 // knows your database structure.
-// Dialect is passed to Kysely's constructor, and from now on, Kysely knows how 
+// Dialect is passed to Kysely's constructor, and from now on, Kysely knows how
 // to communicate with your database.
 export const db = new Kysely<Database>({
     dialect,
 })
-
-console.log('123')

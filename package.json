@@ -12,7 +12,7 @@
         "format": "prettier --write .",
         "test:integration": "playwright test",
         "test:unit": "vitest",
-        "a": "mikro-orm migration:create"
+        "migrate:create": "vite-node migrations/migration-runner.ts --create"
     },
     "devDependencies": {
         "@fontsource/fira-mono": "^4.5.10",
@@ -41,6 +41,7 @@
     "dependencies": {
         "kysely": "^0.26.3",
         "pg": "^8.11.3",
-        "ulidx": "^2.2.1"
+        "ulidx": "^2.2.1",
+        "vite-node": "^1.0.4"
     }
 }
