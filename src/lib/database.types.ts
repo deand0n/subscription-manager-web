@@ -4,7 +4,7 @@ import type { ColumnType, Generated, Insertable, Selectable, Updateable } from '
 
 export interface Database {
     user: UserTable;
-    service: ServiceTable;
+    resource: ResourceTable;
     subscriber: SubscriberTable;
 }
 
@@ -22,7 +22,7 @@ export type User = Selectable<UserTable>;
 export type NewUser = Insertable<UserTable>;
 export type UserUpdate = Updateable<UserTable>;
 
-export interface ServiceTable {
+export interface ResourceTable {
     id: Generated<number>;
     price: number;
     description?: string;
@@ -33,16 +33,19 @@ export interface ServiceTable {
     owner_id: number;
 }
 
-export type Service = Selectable<ServiceTable>;
-export type NewService = Insertable<ServiceTable>;
-export type ServiceUpdate = Updateable<ServiceTable>;
+export type Resource = Selectable<ResourceTable>;
+export type NewResource = Insertable<ResourceTable>;
+export type ResourceUpdate = Updateable<ResourceTable>;
 
 export interface SubscriberTable {
     id: Generated<number>;
     description?: string;
 
+    created_at: ColumnType<Date, string | undefined, never>;
+    deleted_at: ColumnType<Date | undefined, never, string | undefined>;
+
     user_id: number;
-    service_id: number;
+    resource_id: number;
 }
 
 export type Subscriber = Selectable<SubscriberTable>;

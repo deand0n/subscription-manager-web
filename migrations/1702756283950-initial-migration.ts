@@ -13,7 +13,7 @@ export async function up(db: Kysely<unknown>): Promise<void> {
         .execute();
 
     await db.schema
-        .createTable('service')
+        .createTable('resource')
         .addColumn('id', 'serial', (col) => col.primaryKey())
         .addColumn('price', 'int4', (col) => col.notNull())
         .addColumn('description', 'varchar(1000)')
@@ -33,14 +33,14 @@ export async function up(db: Kysely<unknown>): Promise<void> {
         .addColumn('deleted_at', 'timestamp')
 
         .addColumn('user_id', 'integer', (col) => col.references('user.id').notNull())
-        .addColumn('service_id', 'integer', (col) => col.references('service.id').notNull())
+        .addColumn('resource_id', 'integer', (col) => col.references('resource.id').notNull())
         .execute();
 }
 
 export async function down(db: Kysely<unknown>): Promise<void> {
     await db.schema.dropTable('subscriber').execute();
 
-    await db.schema.dropTable('service').execute();
+    await db.schema.dropTable('resource').execute();
 
     await db.schema.dropTable('user').execute();
 }
