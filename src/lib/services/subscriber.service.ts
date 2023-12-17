@@ -1,4 +1,4 @@
-import { db } from '../../../database';
+import { db } from '../database';
 import type { NewUser, User, UserUpdate } from '../database.types';
 
 export const userService = {

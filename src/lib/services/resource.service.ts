@@ -1,4 +1,4 @@
-import { db } from '../../../database';
+import { db } from '../database';
 import type { NewResource, Resource, ResourceUpdate } from '../database.types';
 
 export const resourceService = {
