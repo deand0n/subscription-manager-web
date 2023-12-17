@@ -8,21 +8,19 @@ export interface Database {
     subscriber: SubscriberTable;
 }
 
-
 export interface UserTable {
     id: Generated<number>;
     first_name: string;
     lase_name: string;
     description?: string;
 
-    created_at: ColumnType<Date, string | undefined, never>
-    deleted_at: ColumnType<Date | undefined, never, string | undefined>
+    created_at: ColumnType<Date, string | undefined, never>;
+    deleted_at: ColumnType<Date | undefined, never, string | undefined>;
 }
 
 export type User = Selectable<UserTable>;
 export type NewUser = Insertable<UserTable>;
 export type UserUpdate = Updateable<UserTable>;
-
 
 export interface ServiceTable {
     id: Generated<number>;
@@ -38,7 +36,6 @@ export interface ServiceTable {
 export type Service = Selectable<ServiceTable>;
 export type NewService = Insertable<ServiceTable>;
 export type ServiceUpdate = Updateable<ServiceTable>;
-
 
 export interface SubscriberTable {
     id: Generated<number>;

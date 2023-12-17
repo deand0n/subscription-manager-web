@@ -5,7 +5,7 @@ import { db } from '../database';
 
 process.env.TZ = 'UTC';
 
-type Operation = '--create' | '--up' | '--down'
+type Operation = '--create' | '--up' | '--down';
 
 const args = process.argv;
 const operation = args[2] as Operation;
@@ -34,12 +34,12 @@ export async function down(db: Kysely<any>): Promise<void> {
 }
 
 async function runMigrations(operation: Partial<Operation>) {
-    type PossibleMethods = 'migrateToLatest' | 'migrateDown'
+    type PossibleMethods = 'migrateToLatest' | 'migrateDown';
 
     const operationToMethod = new Map<Operation, PossibleMethods>([
         ['--up', 'migrateToLatest'],
         ['--down', 'migrateDown'],
-    ])
+    ]);
 
     const method = operationToMethod.get(operation);
 
@@ -54,8 +54,8 @@ async function runMigrations(operation: Partial<Operation>) {
             fs,
             path,
             // This needs to be an absolute path.
-            migrationFolder: path.join(__dirname, './')
-        })
+            migrationFolder: path.join(__dirname, './'),
+        }),
     });
 
     const { error, results } = await migrator[method]();
@@ -77,11 +77,10 @@ async function runMigrations(operation: Partial<Operation>) {
     await db.destroy();
 }
 
-
 if (operation === '--create') {
     createMigration();
 } else if (operation === '--up' || operation === '--down') {
     runMigrations(operation);
 } else {
-    console.error('Invalid operation')
+    console.error('Invalid operation');
 }
