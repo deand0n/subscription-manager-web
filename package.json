@@ -13,7 +13,8 @@
         "test:integration": "playwright test",
         "test:unit": "vitest",
         "migrate:create": "vite-node migrations/migration-runner.ts --create",
-        "migrate:up": "vite-node migrations/migration-runner.ts --up"
+        "migrate:up": "vite-node migrations/migration-runner.ts --up",
+        "migrate:down": "vite-node migrations/migration-runner.ts --down"
     },
     "devDependencies": {
         "@fontsource/fira-mono": "^4.5.10",

@@ -5,8 +5,10 @@ import { db } from '../database';
 
 process.env.TZ = 'UTC';
 
+type Operation = '--create' | '--up' | '--down'
+
 const args = process.argv;
-const operation = args[2];
+const operation = args[2] as Operation;
 
 async function createMigration() {
     const name = args.find((value) => value.includes('--name='))?.split('--name=')[1];
@@ -31,7 +33,21 @@ export async function down(db: Kysely<any>): Promise<void> {
     await fs.appendFile(path.join(__dirname, `./${migrationFileName}`), content);
 }
 
-async function runMigrations() {
+async function runMigrations(operation: Partial<Operation>) {
+    type PossibleMethods = 'migrateToLatest' | 'migrateDown'
+
+    const operationToMethod = new Map<Operation, PossibleMethods>([
+        ['--up', 'migrateToLatest'],
+        ['--down', 'migrateDown'],
+    ])
+
+    const method = operationToMethod.get(operation);
+
+    if (!method) {
+        console.error('Cannot run migrations');
+        return;
+    }
+
     const migrator = new Migrator({
         db,
         provider: new FileMigrationProvider({
@@ -42,7 +58,7 @@ async function runMigrations() {
         })
     });
 
-    const { error, results } = await migrator.migrateToLatest();
+    const { error, results } = await migrator[method]();
 
     results?.forEach((it) => {
         if (it.status === 'Success') {
@@ -61,18 +77,11 @@ async function runMigrations() {
     await db.destroy();
 }
 
-// !
 
 if (operation === '--create') {
     createMigration();
-}
-
-// run up
-if (operation === '--up') {
-    runMigrations();
-}
-
-// run down
-if (operation === '--down') {
-    //
+} else if (operation === '--up' || operation === '--down') {
+    runMigrations(operation);
+} else {
+    console.error('Invalid operation')
 }
