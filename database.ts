@@ -1,7 +1,7 @@
 import pkg from 'pg';
 const { Pool } = pkg;
 import { Kysely, PostgresDialect } from 'kysely';
-import type { Database } from './database.types';
+import type { Database } from './src/lib/database.types';
 
 const dialect = new PostgresDialect({
     pool: new Pool({
@@ -20,4 +20,5 @@ const dialect = new PostgresDialect({
 // to communicate with your database.
 export const db = new Kysely<Database>({
     dialect,
+    log: ['error', 'query'],
 });

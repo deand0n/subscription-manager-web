@@ -15,6 +15,7 @@ export async function up(db: Kysely<unknown>): Promise<void> {
     await db.schema
         .createTable('resource')
         .addColumn('id', 'serial', (col) => col.primaryKey())
+        .addColumn('name', 'varchar(200)', (col) => col.notNull())
         .addColumn('price', 'int4', (col) => col.notNull())
         .addColumn('description', 'varchar(1000)')
 

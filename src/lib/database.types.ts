@@ -24,6 +24,7 @@ export type UserUpdate = Updateable<UserTable>;
 
 export interface ResourceTable {
     id: Generated<number>;
+    name: string;
     price: number;
     description?: string;
 

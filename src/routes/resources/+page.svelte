@@ -1,27 +1,16 @@
-<svelte:head>
-    <title>Resources</title>
-    <meta name="description" content="Resources">
-</svelte:head>
+<script lang="ts">
+    import type { PageData } from './$types';
 
-<div class="text-column">
-    <h1>resources</h1>
+    export let data: PageData;
+</script>
 
-    <form method="post">
-        <div>
-            <label for="first_name">
-                First name
-                <input name="first_name">
-            </label>
+<div>Resources</div>
 
-            <label for="first_name">
-                Last name
-                <input name="first_name">
-            </label>
+{#each data.resources as res}
+    <div>
+        <div>{res.price}</div>
+        <div>{res.description}</div>
+    </div>
+{/each}
 
-            <label for="first_name">
-                Description
-                <textarea name="first_name"></textarea>
-            </label>
-        </div>
-    </form>
-</div>
+<a href="/resources/create">Create resources</a>

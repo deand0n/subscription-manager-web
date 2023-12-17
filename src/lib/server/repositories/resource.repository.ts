@@ -1,18 +1,18 @@
-import { db } from '../database';
-import type { NewResource, Resource, ResourceUpdate } from '../database.types';
+import { db } from '../../../../database';
+import type { NewResource, Resource, ResourceUpdate } from '../../database.types';
 
-export const resourceService = {
+export const resourceRepository = {
     findById: async (id: number): Promise<Resource | undefined> => {
         return db
             .selectFrom('resource')
             .where('id', '=', id)
-            .where('deleted_at', 'is not', null)
+            .where('deleted_at', 'is', null)
             .selectAll()
             .executeTakeFirst();
     },
 
     getAll: async () => {
-        return db.selectFrom('resource').where('deleted_at', 'is not', null).selectAll().execute();
+        return db.selectFrom('resource').where('deleted_at', 'is', null).selectAll().execute();
     },
 
     create: async (Resource: NewResource): Promise<Resource | undefined> => {

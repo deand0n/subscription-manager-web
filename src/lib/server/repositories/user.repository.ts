@@ -1,18 +1,18 @@
-import { db } from '../database';
-import type { NewUser, User, UserUpdate } from '../database.types';
+import type { NewUser, User, UserUpdate } from '../../database.types';
+import { db } from '../../../../database';
 
-export const userService = {
+export const userRepository = {
     findById: async (id: number): Promise<User | undefined> => {
         return db
             .selectFrom('user')
             .where('id', '=', id)
-            .where('deleted_at', 'is not', null)
+            .where('deleted_at', 'is', null)
             .selectAll()
             .executeTakeFirst();
     },
 
     getAll: async () => {
-        return db.selectFrom('user').where('deleted_at', 'is not', null).selectAll().execute();
+        return db.selectFrom('user').where('deleted_at', 'is', null).selectAll().execute();
     },
 
     create: async (user: NewUser): Promise<User | undefined> => {
