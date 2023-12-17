@@ -12,7 +12,8 @@
         "format": "prettier --write .",
         "test:integration": "playwright test",
         "test:unit": "vitest",
-        "migrate:create": "vite-node migrations/migration-runner.ts --create"
+        "migrate:create": "vite-node migrations/migration-runner.ts --create",
+        "migrate:up": "vite-node migrations/migration-runner.ts --up"
     },
     "devDependencies": {
         "@fontsource/fira-mono": "^4.5.10",

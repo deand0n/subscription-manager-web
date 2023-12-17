@@ -1,31 +1,30 @@
 services:
-  postgres:
-    image: postgres:12.3
-    restart: always
-    ports:
-      - 5555:5432
-    environment:
-      POSTGRES_DB: smw-database
-      POSTGRES_USER: smw-database
-      POSTGRES_PASSWORD: smw-database
+    postgres:
+        image: postgres:12.3
+        restart: always
+        ports:
+            - 5555:5432
+        environment:
+            POSTGRES_DB: smw-database
+            POSTGRES_USER: smw-database
+            POSTGRES_PASSWORD: smw-database
 
-
-  # web:
-  #   build:
-  #     dockerfile: Dockerfile
-  #   restart: always
-  #   ports:
-  #     - 8083:8083
-  #   environment:
-  #     PORT: 8083
-  #     POSTGRES_HOST: postgres
-  #     POSTGRES_PORT: 5555
-  #     POSTGRES_DB: smw-database
-  #     POSTGRES_USER: smw-database
-  #     POSTGRES_PASSWORD: ubicsmw-database
-  #   volumes:
-  #     - ./logs:/home/backend/logs
-  #   links:
-  #     - postgres
-  #   depends_on:
-  #     - postgres
+    # web:
+    #   build:
+    #     dockerfile: Dockerfile
+    #   restart: always
+    #   ports:
+    #     - 8083:8083
+    #   environment:
+    #     PORT: 8083
+    #     POSTGRES_HOST: postgres
+    #     POSTGRES_PORT: 5555
+    #     POSTGRES_DB: smw-database
+    #     POSTGRES_USER: smw-database
+    #     POSTGRES_PASSWORD: ubicsmw-database
+    #   volumes:
+    #     - ./logs:/home/backend/logs
+    #   links:
+    #     - postgres
+    #   depends_on:
+    #     - postgres
