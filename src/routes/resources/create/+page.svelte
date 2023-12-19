@@ -3,11 +3,6 @@
     export let form: ActionData;
 </script>
 
-<svelte:head>
-    <title>Resources</title>
-    <meta name="description" content="Resources" />
-</svelte:head>
-
 <div>
     <form class="form flex flex-col gap-4" method="post">
         <div class="flex flex-col">

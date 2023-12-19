@@ -1,7 +1,13 @@
-<ol class="breadcrumb py-5">
-    <li class="crumb"><a class="anchor" href="/">Home</a></li>
-    <li class="crumb-separator" aria-hidden>&rsaquo;</li>
-    <li>Resources</li>
-</ol>
+<script lang="ts">
+    import AddBreadcrumb from '../AddBreadcrumb.svelte';
+
+    const breadcrumb = {
+        label: 'Resources',
+        link: '/resources',
+        index: 1,
+    };
+</script>
+
+<AddBreadcrumb {breadcrumb} />
 
 <slot />

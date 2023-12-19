@@ -1,5 +1,6 @@
 <script lang="ts">
     import type { PageData } from './$types';
+    import AddBreadcrumb from '../AddBreadcrumb.svelte';
 
     export let data: PageData;
 
