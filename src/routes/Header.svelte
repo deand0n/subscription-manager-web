@@ -1,9 +1,8 @@
 <script lang="ts">
-    import { browser } from '$app/environment';
     import { AppBar, popup, type PopupSettings } from '@skeletonlabs/skeleton';
     import { LightSwitch } from '@skeletonlabs/skeleton';
-
-    import { onMount } from 'svelte';
+    import { theme } from './store';
+    import { browser } from '$app/environment';
 
     const popupClick: PopupSettings = {
         event: 'click',
@@ -12,9 +11,11 @@
     };
 
     let body: HTMLBodyElement | null;
-    onMount(() => {
+
+    if (browser) {
         body = document.querySelector('body');
-    });
+        body?.setAttribute('data-theme', $theme);
+    }
 
     const themeList = [
         'hamlindigo',
@@ -31,6 +32,7 @@
 
     const changeTheme = (theme: string) => {
         body?.setAttribute('data-theme', theme);
+        $theme = theme;
     };
 </script>
 
