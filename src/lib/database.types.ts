@@ -22,11 +22,17 @@ export type User = Selectable<UserTable>;
 export type NewUser = Insertable<UserTable>;
 export type UserUpdate = Updateable<UserTable>;
 
+export enum ResourceFrequency {
+    MONTHLY = 'MONTHLY',
+    YEARLY = 'YEARLY',
+}
+
 export interface ResourceTable {
     id: Generated<number>;
     name: string;
     price: number;
     description?: string;
+    frequency: ResourceFrequency;
 
     created_at: ColumnType<Date, string | undefined, never>;
     deleted_at: ColumnType<Date | undefined, never, string | undefined>;
