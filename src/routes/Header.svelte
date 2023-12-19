@@ -38,11 +38,15 @@
     <svelte:fragment slot="lead">
         <LightSwitch />
     </svelte:fragment>
-    <a href="/"><h1 class="h1">SubscriptionManager</h1></a>
+    <a href="/"><h1 class="h1">TestName</h1></a>
     <svelte:fragment slot="trail">
-        <a href="/resources">Resources</a>
-        <a href="/users">Users</a>
-        <button class="btn hover:variant-soft-primary" use:popup={popupClick}>Theme</button>
+        <div class="flex flex-row flex-wrap items-center gap-4">
+            <a href="/resources" class="hidden lg:block">Resources</a>
+            <a href="/users" class="hidden lg:block">Users</a>
+            <button class="btn hover:variant-soft-primary hidden lg:block" use:popup={popupClick}>
+                Theme
+            </button>
+        </div>
     </svelte:fragment>
 </AppBar>
 
