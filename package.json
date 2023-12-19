@@ -48,6 +48,7 @@
     },
     "type": "module",
     "dependencies": {
+        "@floating-ui/dom": "^1.5.3",
         "kysely": "^0.26.3",
         "pg": "^8.11.3",
         "ulidx": "^2.2.1",

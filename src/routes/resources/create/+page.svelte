@@ -8,19 +8,21 @@
     <meta name="description" content="Resources" />
 </svelte:head>
 
-<div class="w-1/2 mx-auto">
-    <h1 class="text-3xl font-bold mb-5">Resources</h1>
-
-    <form class="flex flex-col gap-4" method="post">
+<div>
+    <form class="form flex flex-col gap-4" method="post">
+        <div class="flex flex-col">
+            <label for="name" class="block"> Name </label>
+            <input required class="input" name="name" />
+        </div>
         <div class="flex flex-col">
             <label for="price" class="block"> Price </label>
-            <input class="h-10" name="price" type="number" />
+            <input required class="input" name="price" type="number" />
         </div>
         <div class="flex flex-col">
-            <label for="description"> Description </label>
-            <textarea name="description"></textarea>
+            <label class="label" for="description"> Description </label>
+            <textarea class="textarea" name="description"></textarea>
         </div>
-        <button>Submit</button>
+        <button class="btn btn-md variant-filled-primary">Submit</button>
     </form>
 
     {#if form?.success}

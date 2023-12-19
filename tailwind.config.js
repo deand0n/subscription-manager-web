@@ -19,9 +19,22 @@ export default {
     },
     plugins: [
         // 4. Append the Skeleton plugin (after other plugins)
-        skeleton({
-            themes: { preset: ['hamlindigo'] },
-        }),
         forms,
+        skeleton({
+            themes: {
+                preset: [
+                    'hamlindigo',
+                    'skeleton',
+                    'wintry',
+                    'crimson',
+                    'gold-nouveau',
+                    'modern',
+                    'rocket',
+                    'sahara',
+                    'seafoam',
+                    'vintage',
+                ],
+            },
+        }),
     ],
 };
