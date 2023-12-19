@@ -1,9 +1,12 @@
 <script lang="ts">
+    import { page } from '$app/stores';
     import AddBreadcrumb from '../../AddBreadcrumb.svelte';
 
+    const { id } = $page.params;
+
     const breadcrumb = {
-        label: 'new product',
-        link: '/resources/create',
+        label: `Resource ID: ${id}`,
+        link: `/resources/${id}`,
     };
 </script>
 

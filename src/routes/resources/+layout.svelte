@@ -4,7 +4,6 @@
     const breadcrumb = {
         label: 'Resources',
         link: '/resources',
-        index: 1,
     };
 </script>
 
