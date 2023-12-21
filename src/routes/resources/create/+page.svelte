@@ -17,6 +17,14 @@
             <label class="label" for="description"> Description </label>
             <textarea class="textarea" name="description"></textarea>
         </div>
+        <div class="flex flex-col">
+            <label class="label" for="frequency"> Frequency </label>
+            <select class="select" name="frequency" value="">
+                <option value="">Please select an option</option>
+                <option value="MONTHLY">Monthly</option>
+                <option value="YEARLY">Yearly</option>
+            </select>
+        </div>
         <button class="btn btn-md variant-filled-primary">Submit</button>
     </form>
 
