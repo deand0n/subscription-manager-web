@@ -5,12 +5,6 @@
     import type { SubmitFunction } from '@sveltejs/kit';
     import { enhance } from '$app/forms';
 
-    const popupClick: PopupSettings = {
-        event: 'click',
-        target: 'popupClick',
-        placement: 'top',
-    };
-
     const themes = [
         { type: 'skeleton', name: 'Skeleton', icon: '💀' },
         { type: 'wintry', name: 'Wintry', icon: '🌨️' },
@@ -36,37 +30,51 @@
 
 <AppBar>
     <svelte:fragment slot="lead">
-        <LightSwitch />
+        <div></div>
     </svelte:fragment>
-    <a href="/"><h1 class="h1">TestName</h1></a>
+    <a href="/"><h1 class="h1">SMW</h1></a>
     <svelte:fragment slot="trail">
         <div class="flex flex-row flex-wrap items-center gap-4">
-            <a href="/resources" class="hidden lg:block">Resources</a>
-            <a href="/users" class="hidden lg:block">Users</a>
-            <button class="btn hover:variant-soft-primary hidden lg:block" use:popup={popupClick}>
-                Theme
+            <button
+                class="btn hover:variant-soft-primary"
+                use:popup={{ event: 'click', target: 'theme', closeQuery: 'a[href]' }}
+            >
+                <span class="text-lg md:!hidden">T</span>
+                <span class="hidden md:inline-block">Theme</span>
+                <i class="fa-solid fa-caret-down opacity-50" />
             </button>
+            <button class="hidden lg:block">test</button>
+            <button class="hidden lg:block">ttest</button>
         </div>
     </svelte:fragment>
 </AppBar>
 
-<div class="card p-4 variant-filled-primary" data-popup="popupClick">
-    <form action="/?/setTheme" method="POST" use:enhance={setTheme}>
-        <ul>
-            {#each themes as { icon, name, type }}
-                <li>
-                    <button
-                        class="option w-full h-full flex flex-row justify-between gap-5"
-                        type="submit"
-                        name="theme"
-                        value={type}
-                        class:bg-primary-active-token={$theme === type}
-                    >
-                        <span>{icon}</span>
-                        <span class="flex-auto text-left">{name}</span>
-                    </button>
-                </li>
-            {/each}
-        </ul>
-    </form>
+<div class="card p-4 w-60 shadow-xl" data-popup="theme">
+    <div class="space-y-4">
+        <section class="flex justify-between items-center">
+            <h6 class="h6">Mode</h6>
+            <LightSwitch />
+        </section>
+        <hr />
+        <nav class="list-nav p-4 -m-4 max-h-64 lg:max-h-[500px] overflow-y-auto">
+            <form action="/?/setTheme" method="POST" use:enhance={setTheme}>
+                <ul>
+                    {#each themes as { icon, name, type }}
+                        <li>
+                            <button
+                                class="option w-full h-full"
+                                type="submit"
+                                name="theme"
+                                value={type}
+                                class:bg-primary-active-token={$theme === type}
+                            >
+                                <span>{icon}</span>
+                                <span class="flex-auto text-left">{name}</span>
+                            </button>
+                        </li>
+                    {/each}
+                </ul>
+            </form>
+        </nav>
+    </div>
 </div>
