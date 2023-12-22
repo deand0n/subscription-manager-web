@@ -1,6 +1,6 @@
 import type { ColumnType, Generated, Insertable, Selectable, Updateable } from 'kysely';
 
-// https://wanago.io/2023/10/16/api-with-nestjs-129-implementing-soft-deletes-with-sql-and-kysely/
+export type BaseKeys = 'id' | 'created_at' | 'deleted_at';
 
 export interface Database {
     user: UserTable;
@@ -18,9 +18,9 @@ export interface UserTable {
     deleted_at: ColumnType<Date | undefined, never, string | undefined>;
 }
 
-export type User = Selectable<UserTable>;
-export type NewUser = Insertable<UserTable>;
-export type UserUpdate = Updateable<UserTable>;
+export type UserSelectable = Selectable<UserTable>;
+export type UserInsertable = Insertable<UserTable>;
+export type UserUpdateable = Updateable<UserTable>;
 
 export enum ResourceFrequency {
     MONTHLY = 'MONTHLY',
@@ -40,9 +40,9 @@ export interface ResourceTable {
     owner_id: number;
 }
 
-export type Resource = Selectable<ResourceTable>;
-export type NewResource = Insertable<ResourceTable>;
-export type ResourceUpdate = Updateable<ResourceTable>;
+export type ResourceSelectable = Selectable<ResourceTable>;
+export type ResourceInsertable = Insertable<ResourceTable>;
+export type ResourceUpdateable = Updateable<ResourceTable>;
 
 export interface SubscriberTable {
     id: Generated<number>;
@@ -55,6 +55,6 @@ export interface SubscriberTable {
     resource_id: number;
 }
 
-export type Subscriber = Selectable<SubscriberTable>;
-export type NewSubscriber = Insertable<SubscriberTable>;
-export type SubscriberUpdate = Updateable<SubscriberTable>;
+export type SubscriberSelectable = Selectable<SubscriberTable>;
+export type SubscriberInsertable = Insertable<SubscriberTable>;
+export type SubscriberUpdateable = Updateable<SubscriberTable>;

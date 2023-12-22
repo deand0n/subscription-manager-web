@@ -1,10 +1,11 @@
 import { resourceRepository } from '$lib/server/repositories/resource.repository';
-import type { ResourceFrequency } from '../../../lib/database.types';
+import type { Resource } from '../../../lib/@types/resource';
+import { parseResourceFromForm } from '../parseResourcesFromForm';
 import type { Actions, PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async (event) => {
     return {
-        resource: await resourceRepository.findById(+event.params.id),
+        resource: (await resourceRepository.findById(+event.params.id)) as Resource,
     };
 };
 
@@ -12,16 +13,13 @@ export const actions = {
     update: async (event) => {
         const data = await event.request.formData();
 
-        const name = data.get('name') as string;
-        const description = data.get('description') as string;
-        const price = +(data.get('price') ?? 0);
-        const frequency = data.get('frequency') as ResourceFrequency;
+        const result = parseResourceFromForm(data);
 
-        if (!price || !name || !frequency) {
+        if (!result.valid) {
             return { success: false, message: 'Some values were not provided' };
         }
 
-        await resourceRepository.update(+event.params.id, { name, description, price, frequency });
+        await resourceRepository.update(+event.params.id, result.data);
 
         return { success: true };
     },

@@ -1,8 +1,12 @@
 import { db } from '../../../../database';
-import type { NewSubscriber, Subscriber, SubscriberUpdate } from '../../database.types';
+import type {
+    SubscriberInsertable,
+    SubscriberSelectable,
+    SubscriberUpdateable,
+} from '../../database.types';
 
 export const subscriberRepository = {
-    findById: async (id: number): Promise<Subscriber | undefined> => {
+    findById: async (id: number): Promise<SubscriberSelectable | undefined> => {
         return db
             .selectFrom('subscriber')
             .where('id', '=', id)
@@ -15,7 +19,7 @@ export const subscriberRepository = {
         return db.selectFrom('subscriber').where('deleted_at', 'is', null).selectAll().execute();
     },
 
-    create: async (subscriber: NewSubscriber): Promise<Subscriber | undefined> => {
+    create: async (subscriber: SubscriberInsertable): Promise<SubscriberSelectable | undefined> => {
         return db
             .insertInto('subscriber')
             .values(subscriber)
@@ -23,7 +27,7 @@ export const subscriberRepository = {
             .executeTakeFirstOrThrow();
     },
 
-    update: (id: number, updateWith: SubscriberUpdate) => {
+    update: (id: number, updateWith: SubscriberUpdateable) => {
         return db.updateTable('subscriber').set(updateWith).where('id', '=', id).execute();
     },
 

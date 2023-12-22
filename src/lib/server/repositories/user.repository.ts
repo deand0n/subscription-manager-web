@@ -1,8 +1,8 @@
-import type { NewUser, User, UserUpdate } from '../../database.types';
+import type { UserInsertable, UserSelectable, UserUpdateable } from '../../database.types';
 import { db } from '../../../../database';
 
 export const userRepository = {
-    findById: async (id: number): Promise<User | undefined> => {
+    findById: async (id: number): Promise<UserSelectable | undefined> => {
         return db
             .selectFrom('user')
             .where('id', '=', id)
@@ -15,11 +15,11 @@ export const userRepository = {
         return db.selectFrom('user').where('deleted_at', 'is', null).selectAll().execute();
     },
 
-    create: async (user: NewUser): Promise<User | undefined> => {
+    create: async (user: UserInsertable): Promise<UserSelectable | undefined> => {
         return db.insertInto('user').values(user).returningAll().executeTakeFirstOrThrow();
     },
 
-    update: (id: number, updateWith: UserUpdate) => {
+    update: (id: number, updateWith: UserUpdateable) => {
         return db.updateTable('user').set(updateWith).where('id', '=', id).execute();
     },
 
