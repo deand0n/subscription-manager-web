@@ -1,19 +1,16 @@
 import type { ResourceFrequency } from '../database.types';
+import type { Base } from './base';
 import type { Subscriber } from './subscriber';
 import type { User } from './user';
 
-export interface Resource {
-    id: number;
+export type Resource = {
     name: string;
     price: number;
     description?: string;
     frequency: ResourceFrequency;
 
-    created_at: Date | string;
-    deleted_at?: Date | string;
-
     owner_id: number;
 
     owner: User;
     subscribers: Subscriber[];
-}
+} & Base;

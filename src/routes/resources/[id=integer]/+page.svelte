@@ -44,7 +44,6 @@
         <Table
             data={data.resource.subscribers}
             keyLabel={[{ key: 'description', label: 'Description' }]}
-            entityName="subscribers"
         />
     </div>
 </div>

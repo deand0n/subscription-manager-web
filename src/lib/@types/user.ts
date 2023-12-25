@@ -1,13 +1,10 @@
+import type { Base } from './base';
 import type { Resource } from './resource';
 
-export interface User {
-    id: number;
+export type User = {
     first_name: string;
     last_name: string;
     description?: string;
 
-    created_at: Date | string;
-    deleted_at?: Date | string;
-
     resources: Resource[];
-}
+} & Base;
