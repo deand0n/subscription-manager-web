@@ -39,9 +39,12 @@
         {/if}
     </form>
 
-    <Table
-        data={data.resource.subscribers}
-        keyLabel={[{ key: 'description', label: 'Description' }]}
-        links={{ edit: '', create: '' }}
-    />
+    <div class="mt-5">
+        <h3 class="h3">Subscribers:</h3>
+        <Table
+            data={data.resource.subscribers}
+            keyLabel={[{ key: 'description', label: 'Description' }]}
+            entityName="subscribers"
+        />
+    </div>
 </div>
