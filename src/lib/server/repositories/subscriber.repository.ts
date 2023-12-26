@@ -1,3 +1,4 @@
+import type { UpdateResult } from 'kysely';
 import { db } from '../../../../database';
 import type {
     SubscriberInsertable,
@@ -29,6 +30,29 @@ export const subscriberRepository = {
 
     update: (id: number, updateWith: SubscriberUpdateable) => {
         return db.updateTable('subscriber').set(updateWith).where('id', '=', id).execute();
+    },
+
+    batchDelete: (updateWith: SubscriberUpdateable[]) => {
+        return db.transaction().execute(async (transaction) => {
+            const promises: Promise<UpdateResult[]>[] = [];
+
+            for (const subscriber of updateWith) {
+                if (!subscriber || !subscriber.id) {
+                    continue;
+                }
+
+                subscriber.deleted_at = new Date().toISOString();
+                promises.push(
+                    transaction
+                        .updateTable('subscriber')
+                        .set(subscriber)
+                        .where('id', '=', subscriber.id)
+                        .execute(),
+                );
+            }
+
+            return await Promise.all(promises);
+        });
     },
 
     delete: async (id: number) => {

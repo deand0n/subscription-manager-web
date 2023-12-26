@@ -1,11 +1,25 @@
 <script lang="ts">
-    export let data: PageData;
-    export let form: ActionData;
-
+    import { goto } from '$app/navigation';
+    import { page } from '$app/stores';
+    import type { Subscriber } from '../../../lib/@types/subscriber';
     import Table from '../../../lib/components/Table.svelte';
     import type { ActionData, PageData } from './$types';
 
-    console.log(data.resource.subscribers);
+    export let data: PageData;
+    export let form: ActionData;
+
+    const onCreate = () => {
+        goto(`${$page.url.href}/subscribers/create`);
+    };
+    const onEdit = (id: number) => {
+        goto(`${$page.url.href}/subscribers/${id}`);
+    };
+    const onDeleteSelected = (d: Subscriber[]) => {
+        fetch(`/api/subscribers/delete`, {
+            method: 'PUT',
+            body: JSON.stringify(d),
+        });
+    };
 </script>
 
 <div>
@@ -44,6 +58,9 @@
         <Table
             data={data.resource.subscribers}
             keyLabel={[{ key: 'description', label: 'Description' }]}
+            {onCreate}
+            {onEdit}
+            {onDeleteSelected}
         />
     </div>
 </div>

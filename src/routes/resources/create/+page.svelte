@@ -3,8 +3,8 @@
     export let form: ActionData;
 </script>
 
-<div>
-    <form class="form flex flex-col gap-4" method="post">
+<div class="card p-5">
+    <form class="form flex flex-col gap-6" method="post">
         <div class="flex flex-col">
             <label for="name" class="block"> Name </label>
             <input required class="input" name="name" />

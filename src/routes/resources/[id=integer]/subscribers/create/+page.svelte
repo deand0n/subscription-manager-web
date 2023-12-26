@@ -1,5 +1,8 @@
 <script lang="ts">
+    import { page } from '$app/stores';
+
     // $page
+    console.log($page.params);
 </script>
 
 <!-- <script lang="ts">

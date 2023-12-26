@@ -14,7 +14,7 @@
         goto(`${$page.url.href}/${id}`);
     };
     const onDeleteSelected = (d: Resource[]) => {
-        fetch(`api/resources/delete`, {
+        fetch(`/api/resources/delete`, {
             method: 'PUT',
             body: JSON.stringify(d),
         });
