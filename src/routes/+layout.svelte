@@ -12,8 +12,10 @@
         AppRail,
         AppRailAnchor,
         Modal,
+        type ModalComponent,
     } from '@skeletonlabs/skeleton';
     import { page } from '$app/stores';
+    import CreateSubscriberModal from '../lib/modals/subscriber/CreateSubscriberModal.svelte';
 
     function setBodyThemeAttribute(): void {
         if (!browser) return;
@@ -23,9 +25,13 @@
 
     storePopup.set({ computePosition, autoUpdate, offset, shift, flip, arrow });
     initializeStores();
+
+    const modalRegistry: Record<string, ModalComponent> = {
+        createSubscriberModal: { ref: CreateSubscriberModal },
+    };
 </script>
 
-<Modal />
+<Modal components={modalRegistry} />
 
 <AppShell slotSidebarLeft="hidden lg:block">
     <svelte:fragment slot="header">
@@ -33,7 +39,9 @@
     </svelte:fragment>
     <svelte:fragment slot="default">
         <main class="container mx-auto p-5">
-            <Breadcrumbs />
+            {#if !$page.error?.message}
+                <Breadcrumbs />
+            {/if}
             <slot />
         </main>
     </svelte:fragment>

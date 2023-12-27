@@ -4,8 +4,6 @@ import { subscriberRepository } from '../../../../lib/server/repositories/subscr
 export const PUT: RequestHandler = async (event) => {
     const subscribers = await event.request.json();
 
-    console.log('tests');
-
     if (!subscribers || !Array.isArray(subscribers) || !subscribers.length) {
         return new Response(
             JSON.stringify({

@@ -1,6 +1,7 @@
 <script lang="ts">
     import { goto } from '$app/navigation';
     import { page } from '$app/stores';
+    import { getModalStore, type ModalSettings } from '@skeletonlabs/skeleton';
     import type { Subscriber } from '../../../lib/@types/subscriber';
     import Table from '../../../lib/components/Table.svelte';
     import type { ActionData, PageData } from './$types';
@@ -8,9 +9,20 @@
     export let data: PageData;
     export let form: ActionData;
 
+    const modalStore = getModalStore();
+
     const onCreate = () => {
-        goto(`${$page.url.href}/subscribers/create`);
+        const modalSettings: ModalSettings = {
+            type: 'component',
+            component: 'createSubscriberModal',
+            meta: { resource_id: data.resource.id },
+            response: (subscriber: Subscriber) => {
+                data.resource.subscribers = [...data.resource.subscribers, subscriber];
+            },
+        };
+        modalStore.trigger(modalSettings);
     };
+
     const onEdit = (id: number) => {
         goto(`${$page.url.href}/subscribers/${id}`);
     };
@@ -22,8 +34,8 @@
     };
 </script>
 
-<div>
-    <form class="form flex flex-col gap-4" method="post" action="?/update">
+<div class="card p-5">
+    <form class="form flex flex-col gap-6" method="post" action="?/update">
         <div class="flex flex-col">
             <label for="name" class="block"> Name </label>
             <input required class="input" name="name" value={data.resource.name} />
@@ -52,15 +64,15 @@
             <p>Error: {form.message}</p>
         {/if}
     </form>
+</div>
 
-    <div class="mt-5">
-        <h3 class="h3">Subscribers:</h3>
-        <Table
-            data={data.resource.subscribers}
-            keyLabel={[{ key: 'description', label: 'Description' }]}
-            {onCreate}
-            {onEdit}
-            {onDeleteSelected}
-        />
-    </div>
+<div class="mt-5">
+    <h3 class="h3">Subscribers:</h3>
+    <Table
+        data={data.resource.subscribers}
+        keyLabel={[{ key: 'description', label: 'Description' }]}
+        {onCreate}
+        {onEdit}
+        {onDeleteSelected}
+    />
 </div>
