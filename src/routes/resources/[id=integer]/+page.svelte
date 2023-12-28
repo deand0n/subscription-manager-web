@@ -66,7 +66,7 @@
 </script>
 
 <div class="flex gap-7 flex-row flex-wrap">
-    <div class="card p-5 lg:w-2/5 md:w-full">
+    <div class="card p-5 w-full lg:w-2/5">
         <form class="form flex flex-col gap-6" method="post" action="?/update">
             <div class="flex flex-col">
                 <label for="name" class="block"> Name </label>
