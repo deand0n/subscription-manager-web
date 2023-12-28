@@ -1,6 +1,6 @@
 import { resourceRepository } from '$lib/server/repositories/resource.repository';
 import type { Actions } from '../$types';
-import { parseResourceFromForm } from '../parseResourcesFromForm';
+import { parseResourceFromForm } from '../../../lib/helpers/parseResourcesFromForm';
 
 export const actions = {
     default: async (event) => {

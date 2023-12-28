@@ -1,6 +1,6 @@
 import { resourceRepository } from '$lib/server/repositories/resource.repository';
 import type { Resource } from '../../../lib/@types/resource';
-import { parseResourceFromForm } from '../parseResourcesFromForm';
+import { parseResourceFromForm } from '../../../lib/helpers/parseResourcesFromForm';
 import type { Actions, PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async (event) => {

@@ -10,13 +10,13 @@
     const onCreate = () => {
         goto(`${$page.url.href}/create`);
     };
-    const onEdit = (id: number) => {
-        goto(`${$page.url.href}/${id}`);
+    const onEdit = (user: User) => {
+        goto(`${$page.url.href}/${user.id}`);
     };
-    const onDeleteSelected = (d: User[]) => {
+    const onDeleteSelected = (userList: User[]) => {
         fetch(`/api/users/delete`, {
             method: 'PUT',
-            body: JSON.stringify(d),
+            body: JSON.stringify(userList),
         });
     };
 </script>

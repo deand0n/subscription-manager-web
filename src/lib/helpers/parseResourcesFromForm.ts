@@ -1,5 +1,5 @@
-import type { Resource } from '../../lib/@types/resource';
-import type { ResourceFrequency } from '../../lib/database.types';
+import type { Resource } from '../@types/resource';
+import type { ResourceFrequency } from '../database.types';
 
 type ParseResourceFromForm =
     | {
