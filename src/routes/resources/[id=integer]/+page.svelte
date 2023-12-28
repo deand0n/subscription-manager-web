@@ -26,7 +26,11 @@
             type: 'component',
             component: 'editSubscriberModal',
             meta: { subscriber: subscriber },
-            response: (newSubscriber: Subscriber) => {
+            response: (newSubscriber?: Subscriber) => {
+                if (!newSubscriber) {
+                    return;
+                }
+
                 const oldSubIndex = data.resource.subscribers.findIndex(
                     (sub) => sub.id === newSubscriber.id,
                 )!;

@@ -24,8 +24,6 @@
             }),
         })
             .then(async (response) => {
-                // const res = await response.json();
-
                 $modalStore[0].response?.({
                     id: $modalStore[0].meta.subscriber.id,
                     description: formData.description,

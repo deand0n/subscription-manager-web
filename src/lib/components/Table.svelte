@@ -77,7 +77,7 @@
                         {#if onEdit}
                             <button
                                 class="btn variant-filled-primary"
-                                on:click={() => editClickHandler(row)}
+                                on:click|stopPropagation={() => editClickHandler(row)}
                             >
                                 Edit
                             </button>
