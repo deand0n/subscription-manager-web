@@ -5,7 +5,7 @@
     export let keyLabel: { key: keyof T; label: string }[];
 
     export let onCreate: (() => void) | undefined = undefined;
-    export let onEdit: ((id: number) => void) | undefined = undefined;
+    export let onEdit: ((data: T) => void) | undefined = undefined;
     export let onDeleteSelected: ((data: T[]) => void) | undefined = undefined;
 
     let selectedRows: HTMLTableRowElement[] = [];
@@ -29,8 +29,8 @@
         onCreate?.();
     };
 
-    const editClickHandler = (id: number) => {
-        onEdit?.(id);
+    const editClickHandler = (data: T) => {
+        onEdit?.(data);
     };
 
     const deleteSelectedClickHandler = () => {
@@ -77,7 +77,7 @@
                         {#if onEdit}
                             <button
                                 class="btn variant-filled-primary"
-                                on:click={() => editClickHandler(row.id)}
+                                on:click={() => editClickHandler(row)}
                             >
                                 Edit
                             </button>

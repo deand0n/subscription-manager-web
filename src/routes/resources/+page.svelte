@@ -10,8 +10,8 @@
     const onCreate = () => {
         goto(`${$page.url.href}/create`);
     };
-    const onEdit = (id: number) => {
-        goto(`${$page.url.href}/${id}`);
+    const onEdit = (data: Resource) => {
+        goto(`${$page.url.href}/${data.id}`);
     };
     const onDeleteSelected = (d: Resource[]) => {
         fetch(`/api/resources/delete`, {

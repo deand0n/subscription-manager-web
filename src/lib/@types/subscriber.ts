@@ -1,5 +1,6 @@
-import type { UserSelectable, ResourceSelectable } from '../database.types';
 import type { Base } from './base';
+import type { Resource } from './resource';
+import type { User } from './user';
 
 export type Subscriber = {
     description?: string;
@@ -7,6 +8,6 @@ export type Subscriber = {
     user_id: number;
     resource_id: number;
 
-    user: UserSelectable;
-    resource: ResourceSelectable;
+    user: User;
+    resource: Resource;
 } & Base;

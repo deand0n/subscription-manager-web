@@ -1,6 +1,4 @@
 <script lang="ts">
-    import { goto } from '$app/navigation';
-    import { page } from '$app/stores';
     import { getModalStore, type ModalSettings } from '@skeletonlabs/skeleton';
     import type { Subscriber } from '../../../lib/@types/subscriber';
     import Table from '../../../lib/components/Table.svelte';
@@ -23,8 +21,20 @@
         modalStore.trigger(modalSettings);
     };
 
-    const onEdit = (id: number) => {
-        goto(`${$page.url.href}/subscribers/${id}`);
+    const onEdit = (subscriber: Subscriber) => {
+        const modalSettings: ModalSettings = {
+            type: 'component',
+            component: 'editSubscriberModal',
+            meta: { subscriber: subscriber },
+            response: (newSubscriber: Subscriber) => {
+                const oldSubIndex = data.resource.subscribers.findIndex(
+                    (sub) => sub.id === newSubscriber.id,
+                )!;
+
+                data.resource.subscribers[oldSubIndex].description = newSubscriber.description;
+            },
+        };
+        modalStore.trigger(modalSettings);
     };
     const onDeleteSelected = (d: Subscriber[]) => {
         fetch(`/api/subscribers/delete`, {

@@ -16,6 +16,7 @@
     } from '@skeletonlabs/skeleton';
     import { page } from '$app/stores';
     import CreateSubscriberModal from '../lib/modals/subscriber/CreateSubscriberModal.svelte';
+    import EditSubscriberModal from '../lib/modals/subscriber/EditSubscriberModal.svelte';
 
     function setBodyThemeAttribute(): void {
         if (!browser) return;
@@ -28,6 +29,7 @@
 
     const modalRegistry: Record<string, ModalComponent> = {
         createSubscriberModal: { ref: CreateSubscriberModal },
+        editSubscriberModal: { ref: EditSubscriberModal },
     };
 </script>
 

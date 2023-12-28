@@ -54,8 +54,6 @@
         formData.user.label = event.detail.label;
         formData.user.id = +event.detail.value;
     };
-
-    // $modalStore[0].
 </script>
 
 {#if $modalStore[0]}
