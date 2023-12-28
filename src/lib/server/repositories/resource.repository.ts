@@ -28,7 +28,7 @@ export const resourceRepository = {
     },
 
     getAll: async (): Promise<ResourceSelectable[]> => {
-        return db.selectFrom('resource').where('deleted_at', 'is', null).selectAll().execute();
+        return db.selectFrom('resource').selectAll().where('deleted_at', 'is', null).execute();
     },
 
     create: async (Resource: ResourceInsertable): Promise<ResourceSelectable | undefined> => {
