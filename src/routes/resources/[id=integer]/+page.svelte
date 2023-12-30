@@ -7,8 +7,10 @@
     export let data: PageData;
     export let form: ActionData;
 
+    let subscribers = data.resource.subscribers ?? [];
     let pricePerSubscriber: number;
 
+    console.log(subscribers);
     const modalStore = getModalStore();
 
     const onCreate = () => {
@@ -17,7 +19,7 @@
             component: 'createSubscriberModal',
             meta: { resource_id: data.resource.id },
             response: (subscriber: Subscriber) => {
-                data.resource.subscribers = [...data.resource.subscribers, subscriber];
+                subscribers = [...subscribers, subscriber];
                 calculatePricePerSubscriber();
             },
         };
@@ -34,11 +36,9 @@
                     return;
                 }
 
-                const oldSubIndex = data.resource.subscribers.findIndex(
-                    (sub) => sub.id === newSubscriber.id,
-                )!;
+                const oldSubIndex = subscribers.findIndex((sub) => sub.id === newSubscriber.id)!;
 
-                data.resource.subscribers[oldSubIndex].description = newSubscriber.description;
+                subscribers[oldSubIndex].description = newSubscriber.description;
             },
         };
         modalStore.trigger(modalSettings);
@@ -47,16 +47,22 @@
         fetch(`/api/subscribers/delete`, {
             method: 'PUT',
             body: JSON.stringify(subscriberList),
+        }).then(() => {
+            const filteredArray = subscribers.filter(
+                (obj1) => !subscriberList.some((obj2) => obj2.id === obj1.id),
+            );
+
+            subscribers = filteredArray;
         });
     };
 
     const calculatePricePerSubscriber = () => {
-        if (!data.resource.subscribers.length) {
+        if (!subscribers.length) {
             return;
         }
 
         const price = data.resource.price;
-        const rawPricePerSubscriber = price / data.resource.subscribers.length;
+        const rawPricePerSubscriber = price / subscribers.length;
         const roundedPrice = Math.round(rawPricePerSubscriber * 100) / 100;
 
         pricePerSubscriber = roundedPrice;
@@ -65,7 +71,7 @@
     calculatePricePerSubscriber();
 </script>
 
-<div class="flex gap-7 flex-row flex-wrap">
+<div class="flex gap-7 flex-row flex-wrap items-start">
     <div class="card p-5 w-full lg:w-2/5">
         <form class="form flex flex-col gap-6" method="post" action="?/update">
             <div class="flex flex-col">
@@ -97,11 +103,11 @@
             <button class="btn btn-md variant-filled-primary">Submit</button>
 
             <div class="flex justify-end">
-                <!-- {#if form?.success}
+                {#if form?.success}
                     <p>success</p>
                 {:else if form && !form.success}
                     <p>Error: {form.message}</p>
-                {/if} -->
+                {/if}
                 <div>Created at: {data.resource.created_at.toLocaleString()}</div>
             </div>
         </form>
@@ -111,13 +117,20 @@
         <h3 class="h3">Subscribers:</h3>
         <div class="flex flex-col gap-5">
             <Table
-                data={data.resource.subscribers}
-                keyLabel={[{ key: 'description', label: 'Description' }]}
+                data={subscribers}
+                keyLabel={[
+                    { key: 'description', label: 'Description' },
+                    { key: 'user_full_name', label: 'User Name' },
+                ]}
                 {onCreate}
                 {onEdit}
                 {onDeleteSelected}
             />
-            <div class="alert variant-ghost">Price per subscriber: {pricePerSubscriber} uah</div>
+            {#if pricePerSubscriber}
+                <div class="alert variant-ghost">
+                    Price per subscriber: {pricePerSubscriber} uah
+                </div>
+            {/if}
         </div>
     </div>
 </div>

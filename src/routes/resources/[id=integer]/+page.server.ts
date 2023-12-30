@@ -1,11 +1,21 @@
 import { resourceRepository } from '$lib/server/repositories/resource.repository';
-import type { Resource } from '../../../lib/@types/resource';
+import { error } from '@sveltejs/kit';
 import { parseResourceFromForm } from '../../../lib/helpers/parseResourcesFromForm';
 import type { Actions, PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async (event) => {
+    const resource = await resourceRepository.findById(+event.params.id, false);
+
+    if (!resource) {
+        error(404, {
+            message: 'Not found',
+        });
+    }
+
+    resource.subscribers ??= [];
+
     return {
-        resource: (await resourceRepository.findById(+event.params.id)) as Resource,
+        resource,
     };
 };
 

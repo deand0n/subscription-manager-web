@@ -1,11 +1,19 @@
-import type { User } from '../../../lib/@types/user';
+import { error } from '@sveltejs/kit';
 import { parseUserFromForm } from '../../../lib/helpers/parseUserFromForm';
 import { userRepository } from '../../../lib/server/repositories/user.repository';
 import type { Actions, PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async (event) => {
+    const user = await userRepository.findById(+event.params.id);
+
+    if (!user) {
+        error(404, {
+            message: 'Not found',
+        });
+    }
+
     return {
-        user: (await userRepository.findById(+event.params.id)) as User,
+        user,
     };
 };
 

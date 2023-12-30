@@ -1,13 +1,10 @@
 import type { UpdateResult } from 'kysely';
 import { db } from '../../../../database';
-import type {
-    SubscriberInsertable,
-    SubscriberSelectable,
-    SubscriberUpdateable,
-} from '../../database.types';
+import type { SubscriberInsertable, SubscriberUpdateable } from '../../database.types';
+import type { Subscriber } from '../../@types/subscriber';
 
 export const subscriberRepository = {
-    findById: async (id: number): Promise<SubscriberSelectable | undefined> => {
+    findById: async (id: number): Promise<Subscriber | undefined> => {
         return db
             .selectFrom('subscriber')
             .where('id', '=', id)
@@ -20,7 +17,7 @@ export const subscriberRepository = {
         return db.selectFrom('subscriber').where('deleted_at', 'is', null).selectAll().execute();
     },
 
-    create: async (subscriber: SubscriberInsertable): Promise<SubscriberSelectable | undefined> => {
+    create: async (subscriber: SubscriberInsertable): Promise<Subscriber | undefined> => {
         return db
             .insertInto('subscriber')
             .values(subscriber)

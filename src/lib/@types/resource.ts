@@ -11,6 +11,6 @@ export type Resource = {
 
     owner_id: number;
 
-    owner: User;
-    subscribers: Subscriber[];
+    owner?: User | null;
+    subscribers?: Subscriber[] | null;
 } & Base;

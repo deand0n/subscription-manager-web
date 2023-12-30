@@ -8,6 +8,8 @@ export type Subscriber = {
     user_id: number;
     resource_id: number;
 
-    user: User;
-    resource: Resource;
+    user_full_name?: string;
+
+    user?: User | null;
+    resource?: Resource | null;
 } & Base;

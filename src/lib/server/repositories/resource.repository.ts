@@ -1,60 +1,48 @@
-import type { UpdateResult } from 'kysely';
+import { sql, type UpdateResult } from 'kysely';
 import { db } from '../../../../database';
-import type {
-    ResourceInsertable,
-    ResourceSelectable,
-    ResourceUpdateable,
-} from '../../database.types';
+import type { ResourceInsertable, ResourceUpdateable } from '../../database.types';
 import { jsonArrayFrom } from 'kysely/helpers/postgres';
+import type { Resource } from '../../@types/resource';
 
 export const resourceRepository = {
-    findById: async (id: number): Promise<ResourceSelectable | undefined> => {
+    findById: async (id: number, lazy = true): Promise<Resource | undefined> => {
         return db
             .selectFrom('resource')
             .selectAll()
-            .select((eb) => [
-                'id',
-                jsonArrayFrom(
-                    eb
-                        .selectFrom('subscriber')
-                        .whereRef('subscriber.resource_id', '=', 'resource.id')
-                        .where('subscriber.deleted_at', 'is', null)
-                        .selectAll(),
-                ).as('subscribers'),
-            ])
+            .$if(!lazy, (qb) =>
+                qb.select((eb) => [
+                    jsonArrayFrom(
+                        eb
+                            .selectFrom('subscriber')
+                            .innerJoin('user', 'subscriber.user_id', 'user.id')
+                            .whereRef('subscriber.resource_id', '=', 'resource.id')
+                            .where('subscriber.deleted_at', 'is', null)
+                            .selectAll()
+                            .select([
+                                sql<string>`concat("user".first_name, ' ', "user".last_name)`.as(
+                                    'user_full_name',
+                                ),
+                            ]),
+                    ).as('subscribers'),
+                ]),
+            )
+
             .where('resource.id', '=', id)
             .where('resource.deleted_at', 'is', null)
             .executeTakeFirst();
     },
 
-    getAll: async (): Promise<ResourceSelectable[]> => {
+    getAll: async (): Promise<Resource[]> => {
         return db.selectFrom('resource').selectAll().where('deleted_at', 'is', null).execute();
     },
 
-    create: async (Resource: ResourceInsertable): Promise<ResourceSelectable | undefined> => {
+    create: async (Resource: ResourceInsertable): Promise<Resource | undefined> => {
         return db.insertInto('resource').values(Resource).returningAll().executeTakeFirstOrThrow();
     },
 
     update: (id: number, updateWith: ResourceUpdateable) => {
         return db.updateTable('resource').set(updateWith).where('id', '=', id).execute();
     },
-
-    // batchUpdate: (updateWith: ResourceUpdate[]) => {
-    //     // TODO: figure out how to remove this
-    //     const resources = updateWith as never[];
-
-    //     // ! this is not working, rewrite
-    //     return db
-    //         .updateTable('resource')
-    //         .from(values(resources, 'r'))
-    //         .set((eb) => ({
-    //             name: eb.ref('r.name'),
-    //             price: eb.ref('r.price'),
-    //             description: eb.ref('r.description'),
-    //             deleted_at: eb.ref('r.deleted_at'),
-    //         }))
-    //         .execute();
-    // },
 
     batchDelete: (updateWith: ResourceUpdateable[]) => {
         return db.transaction().execute(async (transaction) => {

@@ -6,5 +6,5 @@ export type User = {
     last_name: string;
     description?: string;
 
-    resources: Resource[];
+    resources?: Resource[];
 } & Base;
