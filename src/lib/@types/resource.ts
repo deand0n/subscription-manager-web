@@ -8,6 +8,7 @@ export type Resource = {
     price: number;
     description?: string;
     frequency: ResourceFrequency;
+    billed_at: Date | string;
 
     owner_id: number;
 

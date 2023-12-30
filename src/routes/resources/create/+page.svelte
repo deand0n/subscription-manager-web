@@ -14,6 +14,10 @@
             <input required class="input" name="price" type="number" />
         </div>
         <div class="flex flex-col">
+            <label class="label" for="billed_at"> Billed at </label>
+            <input type="date" class="input" name="billed_at" />
+        </div>
+        <div class="flex flex-col">
             <label class="label" for="description"> Description </label>
             <textarea class="textarea" name="description"></textarea>
         </div>
@@ -26,11 +30,11 @@
             </select>
         </div>
         <button class="btn btn-md variant-filled-primary">Submit</button>
-    </form>
 
-    {#if form?.success}
-        <p>success</p>
-    {:else if form && !form.success}
-        <p>Error: {form.message}</p>
-    {/if}
+        {#if form?.success}
+            <p>success</p>
+        {:else if form && !form.success}
+            <p>Error: {form.message}</p>
+        {/if}
+    </form>
 </div>

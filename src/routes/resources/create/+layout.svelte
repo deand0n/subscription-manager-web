@@ -2,7 +2,7 @@
     import AddBreadcrumb from '../../AddBreadcrumb.svelte';
 
     const breadcrumb = {
-        label: 'new product',
+        label: 'Create Resource',
         link: '/resources/create',
     };
 </script>

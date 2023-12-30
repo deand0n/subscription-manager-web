@@ -10,7 +10,6 @@
     let subscribers = data.resource.subscribers ?? [];
     let pricePerSubscriber: number;
 
-    console.log(subscribers);
     const modalStore = getModalStore();
 
     const onCreate = () => {
