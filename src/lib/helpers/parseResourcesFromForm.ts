@@ -21,7 +21,7 @@ export const parseResourceFromForm = (form: FormData): ParseResourceFromForm => 
     const billing_start = form.get('billing_start') as string;
     const owner_id = +(form.get('owner_id') ?? 0);
 
-    if (!price || !name || !frequency || !billing_start || !owner_id) {
+    if (!price || !name || !frequency || !billing_start) {
         return { valid: false };
     }
 

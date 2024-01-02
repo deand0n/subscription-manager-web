@@ -88,6 +88,10 @@
                 />
             </div>
             <div class="flex flex-col">
+                <label class="label" for="billing_start"> Billing start </label>
+                <input type="date" class="input" name="billing_start" />
+            </div>
+            <div class="flex flex-col">
                 <label class="label" for="description"> Description </label>
                 <textarea class="textarea" name="description">{data.resource.description}</textarea>
             </div>

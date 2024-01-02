@@ -16,7 +16,7 @@ export const actions = {
 
         const result = parseResourceFromForm(data);
 
-        if (!result.valid) {
+        if (!result.valid || !result.data.owner_id) {
             return { success: false, message: 'Some values were not provided' };
         }
 
