@@ -33,7 +33,7 @@ export interface ResourceTable {
     price: number;
     description?: string;
     frequency: ResourceFrequency;
-    billed_at: Date | string;
+    billing_start: Date | string;
 
     created_at: ColumnType<Date, string | undefined, never>;
     deleted_at: ColumnType<Date | undefined, never, string | undefined>;
