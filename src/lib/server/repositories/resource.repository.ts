@@ -1,8 +1,13 @@
 import { sql, type UpdateResult } from 'kysely';
 import { db } from '../../../../database';
-import type { ResourceInsertable, ResourceUpdateable } from '../../database.types';
+import {
+    ResourceFrequency,
+    type ResourceInsertable,
+    type ResourceUpdateable,
+} from '../../database.types';
 import { jsonArrayFrom } from 'kysely/helpers/postgres';
 import type { Resource } from '../../@types/resource';
+import { addMonths, addYears, subMonths, subYears } from 'date-fns';
 
 export const resourceRepository = {
     findById: async (id: number, lazy = true): Promise<Resource | undefined> => {
@@ -30,6 +35,39 @@ export const resourceRepository = {
             .where('resource.id', '=', id)
             .where('resource.deleted_at', 'is', null)
             .executeTakeFirst();
+    },
+
+    isBilled: async (id: number, billing_start: Date | string, frequency: ResourceFrequency) => {
+        const getBoundary = () => {
+            if (frequency === ResourceFrequency.MONTHLY) {
+                return {
+                    lower: subMonths(billing_start, 1),
+                    upper: addMonths(billing_start, 1),
+                };
+            } else if (frequency === ResourceFrequency.YEARLY) {
+                return {
+                    lower: subYears(billing_start, 1),
+                    upper: addYears(billing_start, 1),
+                };
+            }
+
+            throw 'Invalid resource frequency';
+        };
+
+        const boundary = getBoundary();
+        const lowerBoundary = boundary.lower;
+        const upperBoundary = boundary.upper;
+
+        const bill = await db
+            .selectFrom('bill')
+            .selectAll()
+            .where('bill.resource_id', '=', id)
+            .where('bill.deleted_at', 'is', null)
+            .where('bill.created_at', '>=', lowerBoundary)
+            .where('bill.created_at', '<=', upperBoundary)
+            .executeTakeFirst();
+
+        return !!bill;
     },
 
     getAll: async (): Promise<Resource[]> => {

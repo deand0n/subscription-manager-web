@@ -3,6 +3,7 @@
     import type { Subscriber } from '../../../lib/@types/subscriber';
     import Table from '../../../lib/components/Table.svelte';
     import type { ActionData, PageData } from './$types';
+    import { getPricePerSubscriber } from '../../../lib/helpers/getPricePerSubscriber';
 
     export let data: PageData;
     export let form: ActionData;
@@ -60,11 +61,7 @@
             return;
         }
 
-        const price = data.resource.price;
-        const rawPricePerSubscriber = price / subscribers.length;
-        const roundedPrice = Math.round(rawPricePerSubscriber * 100) / 100;
-
-        pricePerSubscriber = roundedPrice;
+        pricePerSubscriber = getPricePerSubscriber(data.resource.price, subscribers.length);
     };
 
     calculatePricePerSubscriber();

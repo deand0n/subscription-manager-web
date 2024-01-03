@@ -1,5 +1,7 @@
 import type { Handle } from '@sveltejs/kit';
 
+process.env.TZ = 'UTC';
+
 export const handle: Handle = async ({ event, resolve }) => {
     let theme = '';
 

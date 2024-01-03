@@ -13,11 +13,11 @@ export const billRepository = {
             .executeTakeFirst();
     },
 
-    getAll: async () => {
+    getAll: async (): Promise<Bill[]> => {
         return db.selectFrom('bill').where('deleted_at', 'is', null).selectAll().execute();
     },
 
-    create: async (bill: BillInsertable): Promise<Bill | undefined> => {
+    create: async (bill: BillInsertable): Promise<Bill> => {
         return db.insertInto('bill').values(bill).returningAll().executeTakeFirstOrThrow();
     },
 

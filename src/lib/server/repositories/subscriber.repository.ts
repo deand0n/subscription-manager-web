@@ -13,6 +13,15 @@ export const subscriberRepository = {
             .executeTakeFirst();
     },
 
+    getAllByResourceId: (resource_id: number): Promise<Subscriber[]> => {
+        return db
+            .selectFrom('subscriber')
+            .where('deleted_at', 'is', null)
+            .where('resource_id', 'is', resource_id)
+            .selectAll()
+            .execute();
+    },
+
     getAll: async () => {
         return db.selectFrom('subscriber').where('deleted_at', 'is', null).selectAll().execute();
     },

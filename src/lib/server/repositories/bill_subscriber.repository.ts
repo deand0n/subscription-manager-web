@@ -2,8 +2,11 @@ import type { BillSubscriberInsertable, BillSubscriberUpdateable } from '../../d
 import { db } from '../../../../database';
 import type { UpdateResult } from 'kysely';
 import type { BillSubscriber } from '../../@types/bill_subscriber';
+import type { Bill } from '../../@types/bill';
+import { subscriberRepository } from './subscriber.repository';
+import { getPricePerSubscriber } from '../../helpers/getPricePerSubscriber';
 
-export const userRepository = {
+export const billSubscriberRepository = {
     findById: async (id: number): Promise<BillSubscriber | undefined> => {
         return db
             .selectFrom('bill_subscriber')
@@ -23,6 +26,34 @@ export const userRepository = {
 
     create: async (
         bill_subscriber: BillSubscriberInsertable,
+    ): Promise<BillSubscriber | undefined> => {
+        return db
+            .insertInto('bill_subscriber')
+            .values(bill_subscriber)
+            .returningAll()
+            .executeTakeFirstOrThrow();
+    },
+
+    // createFromBill: async (bill: Bill) => {
+    //     // get subscribers
+    //     const subscribers = await subscriberRepository.getAllByResourceId(bill.resource_id);
+    //     const pricePerSubscriber = getPricePerSubscriber(bill.full_amount, subscribers.length);
+
+    //     const bill_subs: BillSubscriberInsertable[] = subscribers.map((sub) => {
+    //         return {
+    //             amount: pricePerSubscriber,
+    //             is_paid_off: false,
+    //             bill_id: bill.id,
+    //             subscriber_id: sub.id,
+    //         };
+    //     });
+
+    //     this.batchCreate()
+    //     // create bill_subs
+    // },
+
+    batchCreate: async (
+        bill_subscriber: BillSubscriberInsertable[],
     ): Promise<BillSubscriber | undefined> => {
         return db
             .insertInto('bill_subscriber')

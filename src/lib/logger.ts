@@ -52,10 +52,11 @@ class ConsoleLogger extends BaseLogger {
 class Logger extends BaseLogger {
     children: BaseLogger[];
 
-    constructor(loggers: BaseLogger[]) {
+    constructor(loggerTypes: BaseLogger[], context?: string) {
         super();
 
-        this.children = loggers;
+        this.children = loggerTypes;
+        this.context = context;
     }
 
     public async debug(message: string) {
@@ -78,4 +79,6 @@ class Logger extends BaseLogger {
     }
 }
 
-export const LoggerInstance = new Logger([new ConsoleLogger()]);
+export const createLogger = (context?: string) => {
+    return new Logger([new ConsoleLogger()], context);
+};
