@@ -6,6 +6,8 @@ export interface Database {
     user: UserTable;
     resource: ResourceTable;
     subscriber: SubscriberTable;
+    bill: BillTable;
+    bill_subscriber: BillSubscriberTable;
 }
 
 export interface UserTable {
@@ -77,12 +79,13 @@ export type BillUpdateable = Updateable<BillTable>;
 export interface BillSubscriberTable {
     id: Generated<number>;
     amount: number;
-    is_paid_off: number;
+    is_paid_off: boolean;
 
     created_at: ColumnType<Date, string | undefined, never>;
     deleted_at: ColumnType<Date | undefined, never, string | undefined>;
 
-    resource_id: number;
+    bill_id: number;
+    subscriber_id: number;
 }
 
 export type BillSubscriberSelectable = Selectable<BillSubscriberTable>;
