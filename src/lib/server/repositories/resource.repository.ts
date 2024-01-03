@@ -9,8 +9,8 @@ import { jsonArrayFrom } from 'kysely/helpers/postgres';
 import type { Resource } from '../../@types/resource';
 import { addMonths, addYears, subMonths, subYears } from 'date-fns';
 
-export const resourceRepository = {
-    findById: async (id: number, lazy = true): Promise<Resource | undefined> => {
+export class ResourceRepository {
+    async findById(id: number, lazy = true): Promise<Resource | undefined> {
         return db
             .selectFrom('resource')
             .selectAll()
@@ -35,9 +35,9 @@ export const resourceRepository = {
             .where('resource.id', '=', id)
             .where('resource.deleted_at', 'is', null)
             .executeTakeFirst();
-    },
+    }
 
-    isBilled: async (id: number, billing_start: Date | string, frequency: ResourceFrequency) => {
+    async isBilled(id: number, billing_start: Date | string, frequency: ResourceFrequency) {
         const getBoundary = () => {
             if (frequency === ResourceFrequency.MONTHLY) {
                 return {
@@ -68,21 +68,21 @@ export const resourceRepository = {
             .executeTakeFirst();
 
         return !!bill;
-    },
+    }
 
-    getAll: async (): Promise<Resource[]> => {
+    getAll(): Promise<Resource[]> {
         return db.selectFrom('resource').selectAll().where('deleted_at', 'is', null).execute();
-    },
+    }
 
-    create: async (Resource: ResourceInsertable): Promise<Resource | undefined> => {
+    create(Resource: ResourceInsertable): Promise<Resource | undefined> {
         return db.insertInto('resource').values(Resource).returningAll().executeTakeFirstOrThrow();
-    },
+    }
 
-    update: (id: number, updateWith: ResourceUpdateable) => {
+    update(id: number, updateWith: ResourceUpdateable) {
         return db.updateTable('resource').set(updateWith).where('id', '=', id).execute();
-    },
+    }
 
-    batchDelete: (updateWith: ResourceUpdateable[]) => {
+    batchDelete(updateWith: ResourceUpdateable[]) {
         return db.transaction().execute(async (transaction) => {
             const promises: Promise<UpdateResult[]>[] = [];
 
@@ -103,13 +103,13 @@ export const resourceRepository = {
 
             return await Promise.all(promises);
         });
-    },
+    }
 
-    delete: async (id: number) => {
+    delete(id: number) {
         return db
             .updateTable('resource')
             .set({ deleted_at: new Date().toISOString() })
             .where('id', '=', id)
             .executeTakeFirst();
-    },
-};
+    }
+}

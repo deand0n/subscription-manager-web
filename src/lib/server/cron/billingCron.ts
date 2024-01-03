@@ -1,8 +1,5 @@
 import { createLogger } from '../../logger';
-import { billRepository } from '../repositories/bill.repository';
-import { billSubscriberRepository } from '../repositories/bill_subscriber.repository';
-import { resourceRepository } from '../repositories/resource.repository';
-import { subscriberRepository } from '../repositories/subscriber.repository';
+import { resourceRepository, billRepository, subscriberRepository } from '../../serviceLocator';
 
 export const billingCron = async () => {
     const logger = createLogger('BillingCron');

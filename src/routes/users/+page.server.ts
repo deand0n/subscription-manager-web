@@ -1,4 +1,4 @@
-import { userRepository } from '../../lib/server/repositories/user.repository';
+import { userRepository } from '../../lib/serviceLocator';
 import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async () => {

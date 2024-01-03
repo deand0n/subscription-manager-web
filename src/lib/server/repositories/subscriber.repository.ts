@@ -3,42 +3,42 @@ import { db } from '../../../../database';
 import type { SubscriberInsertable, SubscriberUpdateable } from '../../database.types';
 import type { Subscriber } from '../../@types/subscriber';
 
-export const subscriberRepository = {
-    findById: async (id: number): Promise<Subscriber | undefined> => {
+export class SubscriberRepository {
+    async findById(id: number): Promise<Subscriber | undefined> {
         return db
             .selectFrom('subscriber')
             .where('id', '=', id)
             .where('deleted_at', 'is', null)
             .selectAll()
             .executeTakeFirst();
-    },
+    }
 
-    getAllByResourceId: (resource_id: number): Promise<Subscriber[]> => {
+    async getAllByResourceId(resource_id: number): Promise<Subscriber[]> {
         return db
             .selectFrom('subscriber')
             .where('deleted_at', 'is', null)
             .where('resource_id', 'is', resource_id)
             .selectAll()
             .execute();
-    },
+    }
 
-    getAll: async () => {
+    async getAll() {
         return db.selectFrom('subscriber').where('deleted_at', 'is', null).selectAll().execute();
-    },
+    }
 
-    create: async (subscriber: SubscriberInsertable): Promise<Subscriber | undefined> => {
+    create(subscriber: SubscriberInsertable): Promise<Subscriber | undefined> {
         return db
             .insertInto('subscriber')
             .values(subscriber)
             .returningAll()
             .executeTakeFirstOrThrow();
-    },
+    }
 
-    update: (id: number, updateWith: SubscriberUpdateable) => {
+    update(id: number, updateWith: SubscriberUpdateable) {
         return db.updateTable('subscriber').set(updateWith).where('id', '=', id).execute();
-    },
+    }
 
-    batchDelete: (updateWith: SubscriberUpdateable[]) => {
+    batchDelete(updateWith: SubscriberUpdateable[]) {
         return db.transaction().execute(async (transaction) => {
             const promises: Promise<UpdateResult[]>[] = [];
 
@@ -59,13 +59,13 @@ export const subscriberRepository = {
 
             return await Promise.all(promises);
         });
-    },
+    }
 
-    delete: async (id: number) => {
+    delete(id: number) {
         return db
             .updateTable('subscriber')
             .set({ deleted_at: new Date().toISOString() })
             .where('id', '=', id)
             .executeTakeFirst();
-    },
-};
+    }
+}

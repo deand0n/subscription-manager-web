@@ -1,5 +1,5 @@
 import type { RequestHandler } from '@sveltejs/kit';
-import { subscriberRepository } from '../../../lib/server/repositories/subscriber.repository';
+import { subscriberRepository } from '../../../lib/serviceLocator';
 
 export const POST: RequestHandler = async (event) => {
     const subscriber = await event.request.json();

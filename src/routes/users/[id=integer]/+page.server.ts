@@ -1,7 +1,7 @@
 import { error } from '@sveltejs/kit';
 import { parseUserFromForm } from '../../../lib/helpers/parseUserFromForm';
-import { userRepository } from '../../../lib/server/repositories/user.repository';
 import type { Actions, PageServerLoad } from './$types';
+import { userRepository } from '../../../lib/serviceLocator';
 
 export const load: PageServerLoad = async (event) => {
     const user = await userRepository.findById(+event.params.id);

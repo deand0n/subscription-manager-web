@@ -3,29 +3,29 @@ import { db } from '../../../../database';
 import type { UpdateResult } from 'kysely';
 import type { User } from '../../@types/user';
 
-export const userRepository = {
-    findById: async (id: number): Promise<User | undefined> => {
+export class UserRepository {
+    findById(id: number): Promise<User | undefined> {
         return db
             .selectFrom('user')
             .where('id', '=', id)
             .where('deleted_at', 'is', null)
             .selectAll()
             .executeTakeFirst();
-    },
+    }
 
-    getAll: async () => {
+    getAll() {
         return db.selectFrom('user').where('deleted_at', 'is', null).selectAll().execute();
-    },
+    }
 
-    create: async (user: UserInsertable): Promise<User | undefined> => {
+    create(user: UserInsertable): Promise<User | undefined> {
         return db.insertInto('user').values(user).returningAll().executeTakeFirstOrThrow();
-    },
+    }
 
-    update: (id: number, updateWith: UserUpdateable) => {
+    update(id: number, updateWith: UserUpdateable) {
         return db.updateTable('user').set(updateWith).where('id', '=', id).execute();
-    },
+    }
 
-    batchDelete: (updateWith: UserUpdateable[]) => {
+    batchDelete(updateWith: UserUpdateable[]) {
         return db.transaction().execute(async (transaction) => {
             const promises: Promise<UpdateResult[]>[] = [];
 
@@ -42,13 +42,13 @@ export const userRepository = {
 
             return await Promise.all(promises);
         });
-    },
+    }
 
-    delete: async (id: number) => {
+    delete(id: number) {
         return db
             .updateTable('user')
             .set({ deleted_at: new Date().toISOString() })
             .where('id', '=', id)
             .executeTakeFirst();
-    },
-};
+    }
+}

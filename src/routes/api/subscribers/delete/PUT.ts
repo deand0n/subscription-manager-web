@@ -1,10 +1,9 @@
 import type { RequestHandler } from '@sveltejs/kit';
-import { userRepository } from '../../../../lib/serviceLocator';
 
 export const PUT: RequestHandler = async (event) => {
-    const users = await event.request.json();
+    const subscribers = await event.request.json();
 
-    if (!users || !Array.isArray(users) || !users.length) {
+    if (!subscribers || !Array.isArray(subscribers) || !subscribers.length) {
         return new Response(
             JSON.stringify({
                 message: 'something went wronk',
@@ -13,7 +12,7 @@ export const PUT: RequestHandler = async (event) => {
         );
     }
 
-    await userRepository.batchDelete(users);
+    await subscriberRepository.batchDelete(subscribers);
 
     return new Response(
         JSON.stringify({

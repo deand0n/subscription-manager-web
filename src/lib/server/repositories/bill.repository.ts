@@ -3,29 +3,29 @@ import { db } from '../../../../database';
 import type { UpdateResult } from 'kysely';
 import type { Bill } from '../../@types/bill';
 
-export const billRepository = {
-    findById: async (id: number): Promise<Bill | undefined> => {
+export class BillRepository {
+    async findById(id: number): Promise<Bill | undefined> {
         return db
             .selectFrom('bill')
             .where('id', '=', id)
             .where('deleted_at', 'is', null)
             .selectAll()
             .executeTakeFirst();
-    },
+    }
 
-    getAll: async (): Promise<Bill[]> => {
+    async getAll(): Promise<Bill[]> {
         return db.selectFrom('bill').where('deleted_at', 'is', null).selectAll().execute();
-    },
+    }
 
-    create: async (bill: BillInsertable): Promise<Bill> => {
+    async create(bill: BillInsertable): Promise<Bill> {
         return db.insertInto('bill').values(bill).returningAll().executeTakeFirstOrThrow();
-    },
+    }
 
-    update: (id: number, updateWith: BillUpdateable) => {
+    async update(id: number, updateWith: BillUpdateable) {
         return db.updateTable('bill').set(updateWith).where('id', '=', id).execute();
-    },
+    }
 
-    batchDelete: (updateWith: BillUpdateable[]) => {
+    async batchDelete(updateWith: BillUpdateable[]) {
         return db.transaction().execute(async (transaction) => {
             const promises: Promise<UpdateResult[]>[] = [];
 
@@ -42,13 +42,13 @@ export const billRepository = {
 
             return await Promise.all(promises);
         });
-    },
+    }
 
-    delete: async (id: number) => {
+    async delete(id: number) {
         return db
             .updateTable('bill')
             .set({ deleted_at: new Date().toISOString() })
             .where('id', '=', id)
             .executeTakeFirst();
-    },
-};
+    }
+}

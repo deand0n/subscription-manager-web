@@ -1,5 +1,5 @@
 import type { RequestHandler } from '@sveltejs/kit';
-import { resourceRepository } from '../../../../lib/server/repositories/resource.repository';
+import { resourceRepository } from '../../../../lib/serviceLocator';
 
 export const PUT: RequestHandler = async (event) => {
     const resources = await event.request.json();

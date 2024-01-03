@@ -1,5 +1,5 @@
 import type { Actions } from '../$types';
-import { userRepository } from '../../../lib/server/repositories/user.repository';
+import { userRepository } from '../../../lib/serviceLocator';
 
 export const actions = {
     default: async (event) => {

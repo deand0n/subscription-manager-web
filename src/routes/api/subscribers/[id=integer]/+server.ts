@@ -1,6 +1,6 @@
 import type { RequestHandler } from '@sveltejs/kit';
-import { subscriberRepository } from '../../../../lib/server/repositories/subscriber.repository';
 import type { SubscriberUpdateable } from '../../../../lib/database.types';
+import { subscriberRepository } from '../../../../lib/serviceLocator';
 
 export const PUT: RequestHandler = async (event) => {
     const subscriber: SubscriberUpdateable = await event.request.json();
