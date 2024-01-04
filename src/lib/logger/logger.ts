@@ -1,44 +1,5 @@
-import { format } from 'date-fns';
-
-abstract class BaseLogger {
-    protected context?: string;
-
-    public abstract debug(message: string): Promise<void>;
-    public abstract log(message: string): Promise<void>;
-    public abstract warn(message: string): Promise<void>;
-    public abstract error(message: string): Promise<void>;
-
-    public setContext(context: string): void {
-        this.context = context;
-    }
-
-    protected getFormattedMessage(message: string): string {
-        const timestamp = `${format(new Date(), 'yyyy-MM-dd HH:mm')}`;
-        const prefix = `[${this.context}] `;
-
-        return `${timestamp} ${prefix} ${message}`;
-    }
-}
-
-class ConsoleLogger extends BaseLogger {
-    constructor(context?: string) {
-        super();
-        this.context = context;
-    }
-
-    public async debug(message: string) {
-        console.log(this.getFormattedMessage(message));
-    }
-    public async log(message: string) {
-        console.log(this.getFormattedMessage(message));
-    }
-    public async warn(message: string) {
-        console.warn(this.getFormattedMessage(message));
-    }
-    public async error(message: string) {
-        console.error(this.getFormattedMessage(message));
-    }
-}
+import { BaseLogger } from './baseLogger';
+import { ConsoleLogger } from './consoleLogger';
 
 class LoggerManager extends BaseLogger {
     private children: BaseLogger[];

@@ -1,6 +1,6 @@
 import { schedule, type ScheduledTask } from 'node-cron';
 import { checkBilling } from './billingCron';
-import { createLogger } from '../../logger';
+import { createLogger } from '../../logger/logger';
 
 export const startCronJobs = () => {
     const logger = createLogger('CRON');

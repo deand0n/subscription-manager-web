@@ -1,4 +1,4 @@
-import { createLogger } from '../../logger';
+import { createLogger } from '../../logger/logger';
 import { resourceRepository, billRepository, billSubscriberRepository } from '../../serviceLocator';
 
 export const checkBilling = async () => {
