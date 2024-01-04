@@ -1,4 +1,5 @@
 import type { Handle } from '@sveltejs/kit';
+import { startCronJobs } from './lib/server/cron/cron';
 
 process.env.TZ = 'UTC';
 
@@ -18,3 +19,5 @@ export const handle: Handle = async ({ event, resolve }) => {
         transformPageChunk: ({ html }) => html.replace('data-theme=""', `data-theme="${theme}"`),
     });
 };
+
+startCronJobs();

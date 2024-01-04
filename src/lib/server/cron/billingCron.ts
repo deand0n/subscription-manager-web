@@ -1,7 +1,7 @@
 import { createLogger } from '../../logger';
-import { resourceRepository, billRepository, subscriberRepository } from '../../serviceLocator';
+import { resourceRepository, billRepository, billSubscriberRepository } from '../../serviceLocator';
 
-export const billingCron = async () => {
+export const checkBilling = async () => {
     const logger = createLogger('BillingCron');
 
     const resources = await resourceRepository.getAll();
@@ -18,24 +18,15 @@ export const billingCron = async () => {
             continue;
         }
 
-        // create bill event
         const bill = await billRepository.create({
             full_amount: resource.price,
             resource_id: resource.id,
         });
+        logger.log(`Bill id: ${bill.id} was created for resource id: ${resource.id}`);
 
-        // get subscribers
-        const subscribers = await subscriberRepository.getAllByResourceId(resource.id);
-        // create bill subscribers events
-
-        // billSubscriberRepository.batchCreate()
-        // for (const sub of subscribers) {
-        //     // billSubscriberRepository.create()
-        // }
+        await billSubscriberRepository.createFromBill(bill);
+        logger.log(
+            `Bills for subscribers was created for resource. resource_id: ${resource.id}, bill_id: ${bill.id}`,
+        );
     }
-
-    // check resource billing_start
-    // if billing_start after today
-    // create bill record
-    // create according bill_subscriber records
 };

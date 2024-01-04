@@ -14,13 +14,18 @@ abstract class BaseLogger {
 
     protected getFormattedMessage(message: string): string {
         const timestamp = `${format(new Date(), 'yyyy-MM-dd HH:mm')}`;
-        const prefix = `[${this.context ?? ''}] `;
+        const prefix = `[${this.context}] `;
 
         return `${timestamp} ${prefix} ${message}`;
     }
 }
 
 class ConsoleLogger extends BaseLogger {
+    constructor(context?: string) {
+        super();
+        this.context = context;
+    }
+
     public async debug(message: string) {
         console.log(this.getFormattedMessage(message));
     }
@@ -34,29 +39,14 @@ class ConsoleLogger extends BaseLogger {
         console.error(this.getFormattedMessage(message));
     }
 }
-// class FileLogger extends BaseLogger {
-//     public debug(message: string) {
-//         // console.log(this.context + message);
-//     }
-//     public log(message: string) {
-//         // console.log(this.context + message);
-//     }
-//     public warn(message: string) {
-//         // console.warn(this.context + message);
-//     }
-//     public error(message: string) {
-//         // console.error(this.context + message);
-//     }
-// }
 
-class Logger extends BaseLogger {
-    children: BaseLogger[];
+class LoggerManager extends BaseLogger {
+    private children: BaseLogger[];
 
-    constructor(loggerTypes: BaseLogger[], context?: string) {
+    constructor(loggerTypes: BaseLogger[]) {
         super();
 
         this.children = loggerTypes;
-        this.context = context;
     }
 
     public async debug(message: string) {
@@ -72,6 +62,12 @@ class Logger extends BaseLogger {
         this.runOperations('error', message);
     }
 
+    public setContext(context: string): void {
+        for (const child of this.children) {
+            child.setContext(context);
+        }
+    }
+
     private runOperations(operation: 'debug' | 'log' | 'warn' | 'error', message: string): void {
         for (const child of this.children) {
             child[operation](message);
@@ -79,6 +75,24 @@ class Logger extends BaseLogger {
     }
 }
 
+enum LoggerType {
+    CONSOLE = 'console',
+    FILE = 'file',
+}
+
 export const createLogger = (context?: string) => {
-    return new Logger([new ConsoleLogger()], context);
+    // TODO: move to configs
+    const type: LoggerType[] = [LoggerType.CONSOLE];
+
+    const getLoggers = (ctx?: string) => {
+        const loggers: BaseLogger[] = [];
+
+        if (type.includes(LoggerType.CONSOLE)) {
+            loggers.push(new ConsoleLogger(ctx));
+        }
+
+        return loggers;
+    };
+
+    return new LoggerManager(getLoggers(context));
 };

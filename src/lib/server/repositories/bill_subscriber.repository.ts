@@ -33,11 +33,10 @@ export class BillSubscriberRepository {
     }
 
     async createFromBill(bill: Bill) {
-        // get subscribers
         const subscribers = await subscriberRepository.getAllByResourceId(bill.resource_id);
         const pricePerSubscriber = getPricePerSubscriber(bill.full_amount, subscribers.length);
 
-        const bill_subs: BillSubscriberInsertable[] = subscribers.map((sub) => {
+        const billSubscribers: BillSubscriberInsertable[] = subscribers.map((sub) => {
             return {
                 amount: pricePerSubscriber,
                 is_paid_off: false,
@@ -46,8 +45,7 @@ export class BillSubscriberRepository {
             };
         });
 
-        await this.batchCreate(bill_subs);
-        // create bill_subs
+        return this.batchCreate(billSubscribers);
     }
 
     async batchCreate(
@@ -68,17 +66,17 @@ export class BillSubscriberRepository {
         return db.transaction().execute(async (transaction) => {
             const promises: Promise<UpdateResult[]>[] = [];
 
-            for (const bill_subscriber of updateWith) {
-                if (!bill_subscriber || !bill_subscriber.id) {
+            for (const billSubscriber of updateWith) {
+                if (!billSubscriber || !billSubscriber.id) {
                     continue;
                 }
 
-                bill_subscriber.deleted_at = new Date().toISOString();
+                billSubscriber.deleted_at = new Date().toISOString();
                 promises.push(
                     transaction
                         .updateTable('bill_subscriber')
-                        .set(bill_subscriber)
-                        .where('id', '=', bill_subscriber.id)
+                        .set(billSubscriber)
+                        .where('id', '=', billSubscriber.id)
                         .execute(),
                 );
             }

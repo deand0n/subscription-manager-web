@@ -9,5 +9,3 @@ export const billSubscriberRepository = new BillSubscriberRepository();
 export const resourceRepository = new ResourceRepository();
 export const subscriberRepository = new SubscriberRepository();
 export const userRepository = new UserRepository();
-
-console.log('test1');
