@@ -5,29 +5,9 @@ import type { BillSubscriber } from '../../@types/bill_subscriber';
 import { FmtString, bold, fmt, join, mention } from 'telegraf/format';
 import { format } from 'date-fns';
 
-// bot.writeBillMessage(resource)
-
-// bot handle billing
-
-// import { Telegraf } from 'telegraf';
-// import { message } from 'telegraf/filters';
-
-// const bot = new Telegraf('1672786429:AAFrgX-g2lOWMLIP0AbKjpBTBoAMHVP_2S0');
-// bot.start((ctx) => ctx.reply('Welcome'));
-// bot.help((ctx) => ctx.reply('Send me a sticker'));
-// bot.on(message('sticker'), (ctx) => ctx.reply('👍'));
-// bot.hears('hi', (ctx) => ctx.reply('Hey there'));
-// bot.launch();
-
-// // Enable graceful stop
-// process.once('SIGINT', () => bot.stop('SIGINT'));
-// process.once('SIGTERM', () => bot.stop('SIGTERM'));
-
-// console.log(123);
-
 class TelegramBot {
     private logger = createLogger('Bot');
-    private bot = new Telegraf('6759620634:AAHkLHioC0GyiWodHM-U2Ds9MngiF9g3BpI');
+    private bot = new Telegraf(import.meta.env.VITE_TELEGRAM_BOT_TOKEN);
 
     constructor() {
         this.bot.catch((err) => {
@@ -55,21 +35,7 @@ class TelegramBot {
 
         this.logger.debug(`WriteBillMessage result:\n${JSON.stringify(result)}`);
 
-        // this.bot.telegram.message
         this.bot.telegram.sendMessage(telegram_group_id, result);
-        // this.bot.telegram.sendMessage(telegram_group_id, fmt`${mention('Vlad', 709314547)}}`);
-
-        // this.bot.telegram.sendMessage('-4078774566', 'FIRST TEST MESSAGE');
-        // this.bot.action();
-        // get resource telegram group_id
-        // get all subscribers and corresponding users
-        // write message, should include subscriber, mentioned user, price to pay
-        // ex.:
-        // Vlad Kopylets - 200uah
-        // Vlad Kopylets (brother) - 200uah
-        // etc
-
-        console.log('resource');
     }
 
     private getBillSubscribersMessage(billSubscribers: BillSubscriber[]) {
