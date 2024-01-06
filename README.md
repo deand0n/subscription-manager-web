@@ -1,22 +1,38 @@
-# create-svelte
+# Subscription-manager-web
 
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte).
+This is fullstack application with telegram integration, aimed to automate management of subscriptions.
 
-## Creating a project
+It consists of frontend (admin page), backend (store the data), telegram integration (billing notifications)
 
-If you're seeing this, you've probably already done this step. Congrats!
+## Telegram integration
 
-```bash
-# create a new project in the current directory
-npm create svelte@latest
+Integration works via telegram bot with group privacy mode turned off.
 
-# create a new project in my-app
-npm create svelte@latest my-app
-```
+A daily cron job at 19:00 (UTC) checks for un-billed resources. If any are found, it creates bill and bill_subscriber entities, and then sends a message to a Telegram group, mentioning each bill_subscriber if possible.
+
+## Stack
+
+- Sveltekit + ts (<https://kit.svelte.dev/>) - framework
+  - Tailwind (<https://tailwindcss.com/>)
+  - Skeleton (<https://www.skeleton.dev/>)
+- Posgresql - database
+- kysely - query builder
 
 ## Developing
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+### Install dependencies
+
+```bash
+npm i
+```
+
+### Env variables
+
+1. Copy file .env.example
+2. Rename .env.example to .env
+3. Provide values to env variables in .env
+
+### Start dev server
 
 ```bash
 npm run dev
@@ -34,5 +50,3 @@ npm run build
 ```
 
 You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
