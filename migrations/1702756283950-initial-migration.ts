@@ -7,6 +7,7 @@ export async function up(db: Kysely<unknown>): Promise<void> {
         .addColumn('first_name', 'varchar', (col) => col.notNull())
         .addColumn('last_name', 'varchar', (col) => col.notNull())
         .addColumn('description', 'varchar(1000)')
+        .addColumn('telegram_user_id', 'varchar(100)')
 
         .addColumn('created_at', 'timestamp', (col) => col.defaultTo(sql`now()`).notNull())
         .addColumn('deleted_at', 'timestamp')
@@ -20,6 +21,7 @@ export async function up(db: Kysely<unknown>): Promise<void> {
         .addColumn('description', 'varchar(1000)')
         .addColumn('frequency', 'varchar(50)')
         .addColumn('billing_start', 'varchar')
+        .addColumn('telegram_group_id', 'varchar(100)')
 
         .addColumn('created_at', 'timestamp', (col) => col.defaultTo(sql`now()`).notNull())
         .addColumn('deleted_at', 'timestamp')

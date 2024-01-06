@@ -22,7 +22,7 @@ export class ResourceRepository {
                             .innerJoin('user', 'subscriber.user_id', 'user.id')
                             .whereRef('subscriber.resource_id', '=', 'resource.id')
                             .where('subscriber.deleted_at', 'is', null)
-                            .selectAll()
+                            .selectAll('subscriber')
                             .select([
                                 sql<string>`concat("user".first_name, ' ', "user".last_name)`.as(
                                     'user_full_name',
@@ -70,8 +70,29 @@ export class ResourceRepository {
         return !!bill;
     }
 
-    getAll(): Promise<Resource[]> {
-        return db.selectFrom('resource').selectAll().where('deleted_at', 'is', null).execute();
+    getAll(lazy = true): Promise<Resource[]> {
+        return db
+            .selectFrom('resource')
+            .selectAll()
+            .$if(!lazy, (qb) =>
+                qb.select((eb) => [
+                    jsonArrayFrom(
+                        eb
+                            .selectFrom('subscriber')
+                            .innerJoin('user', 'subscriber.user_id', 'user.id')
+                            .whereRef('subscriber.resource_id', '=', 'resource.id')
+                            .where('subscriber.deleted_at', 'is', null)
+                            .selectAll()
+                            .select([
+                                sql<string>`concat("user".first_name, ' ', "user".last_name)`.as(
+                                    'user_full_name',
+                                ),
+                            ]),
+                    ).as('subscribers'),
+                ]),
+            )
+            .where('deleted_at', 'is', null)
+            .execute();
     }
 
     create(Resource: ResourceInsertable): Promise<Resource | undefined> {

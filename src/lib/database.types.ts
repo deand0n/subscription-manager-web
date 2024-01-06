@@ -15,6 +15,7 @@ export interface UserTable {
     first_name: string;
     last_name: string;
     description?: string;
+    telegram_user_id?: string;
 
     created_at: ColumnType<Date, string | undefined, never>;
     deleted_at: ColumnType<Date | undefined, never, string | undefined>;
@@ -36,6 +37,7 @@ export interface ResourceTable {
     description?: string;
     frequency: ResourceFrequency;
     billing_start: Date | string;
+    telegram_group_id?: string;
 
     created_at: ColumnType<Date, string | undefined, never>;
     deleted_at: ColumnType<Date | undefined, never, string | undefined>;

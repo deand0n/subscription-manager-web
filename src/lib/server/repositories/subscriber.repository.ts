@@ -17,7 +17,7 @@ export class SubscriberRepository {
         return db
             .selectFrom('subscriber')
             .where('deleted_at', 'is', null)
-            .where('resource_id', 'is', resource_id)
+            .where('resource_id', '=', resource_id)
             .selectAll()
             .execute();
     }

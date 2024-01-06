@@ -1,5 +1,6 @@
 import { createLogger } from '../../logger/logger';
 import { resourceRepository, billRepository, billSubscriberRepository } from '../../serviceLocator';
+import { bot } from '../telegram/bot';
 
 export const checkBilling = async () => {
     const logger = createLogger('BillingCron');
@@ -14,7 +15,7 @@ export const checkBilling = async () => {
         );
 
         if (isBilled) {
-            logger.log(`Resource with id: ${resource.id} was billed`);
+            logger.log(`Cannot bill. Resource with id: ${resource.id} was already billed`);
             continue;
         }
 
@@ -25,8 +26,15 @@ export const checkBilling = async () => {
         logger.log(`Bill id: ${bill.id} was created for resource id: ${resource.id}`);
 
         await billSubscriberRepository.createFromBill(bill);
+
         logger.log(
             `Bills for subscribers was created for resource. resource_id: ${resource.id}, bill_id: ${bill.id}`,
         );
+
+        const billSubscribers = await billSubscriberRepository.findByBillId(bill.id);
+
+        if (resource.telegram_group_id) {
+            bot.writeBillMessage(resource.telegram_group_id, resource.name, bill, billSubscribers);
+        }
     }
 };
