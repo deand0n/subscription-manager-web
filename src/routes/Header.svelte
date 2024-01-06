@@ -32,19 +32,16 @@
     <svelte:fragment slot="lead">
         <div></div>
     </svelte:fragment>
-    <a href="/"><h1 class="h1">SMW</h1></a>
+    <a href="/"><h1 class="h1">SubManager</h1></a>
     <svelte:fragment slot="trail">
         <div class="flex flex-row flex-wrap items-center gap-4">
             <button
                 class="btn hover:variant-soft-primary"
                 use:popup={{ event: 'click', target: 'theme', closeQuery: 'a[href]' }}
             >
-                <span class="text-lg md:!hidden">T</span>
-                <span class="hidden md:inline-block">Theme</span>
-                <i class="fa-solid fa-caret-down opacity-50" />
+                Theme
+                <span class="material-symbols-outlined"> arrow_drop_down </span>
             </button>
-            <button class="hidden lg:block">test</button>
-            <button class="hidden lg:block">ttest</button>
         </div>
     </svelte:fragment>
 </AppBar>

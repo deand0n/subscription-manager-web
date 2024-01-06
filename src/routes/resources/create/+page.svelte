@@ -46,6 +46,10 @@
                 <option value="YEARLY">Yearly</option>
             </select>
         </div>
+        <div class="flex flex-col">
+            <label class="label" for="telegram_group_id"> Telegram group id </label>
+            <input class="input" name="telegram_group_id" />
+        </div>
         <label class="label">
             <span>Owner</span>
             <input required class="input" type="text" bind:value={selectedUser.label} />

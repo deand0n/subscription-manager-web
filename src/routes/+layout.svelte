@@ -54,17 +54,25 @@
                 selected={$page.url.pathname.includes('/resources')}
                 title="Account"
             >
-                Resources
+                <div class="flex flex-col">
+                    <span class="material-symbols-outlined"> shop </span>
+                    Resources
+                </div>
             </AppRailAnchor>
             <AppRailAnchor
                 href="/users"
                 selected={$page.url.pathname.includes('/users')}
                 title="Account"
             >
-                Users
+                <div class="flex flex-col">
+                    <span class="material-symbols-outlined"> group </span>
+                    Users
+                </div>
             </AppRailAnchor>
             <svelte:fragment slot="trail">
-                <AppRailAnchor href="/" title="Account">(home)</AppRailAnchor>
+                <AppRailAnchor href="/" title="Account">
+                    <span class="material-symbols-outlined"> home </span>
+                </AppRailAnchor>
             </svelte:fragment>
         </AppRail>
     </svelte:fragment>

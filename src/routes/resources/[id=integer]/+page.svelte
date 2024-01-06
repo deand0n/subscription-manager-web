@@ -100,6 +100,14 @@
                     <option value="YEARLY">Yearly</option>
                 </select>
             </div>
+            <div class="flex flex-col">
+                <label class="label" for="telegram_group_id"> Telegram group id </label>
+                <input
+                    class="input"
+                    name="telegram_group_id"
+                    value={data.resource.telegram_group_id}
+                />
+            </div>
             <button class="btn btn-md variant-filled-primary">Submit</button>
 
             <div class="flex justify-end">

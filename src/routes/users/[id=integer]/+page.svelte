@@ -15,10 +15,13 @@
             <label for="last_name" class="block"> last_name </label>
             <input required class="input" name="last_name" value={data.user.last_name} />
         </div>
-
         <div class="flex flex-col">
             <label class="label" for="description"> Description </label>
             <textarea class="textarea" name="description">{data.user.description}</textarea>
+        </div>
+        <div class="flex flex-col">
+            <label class="label" for="telegram_user_id"> Telegram user id </label>
+            <input class="input" name="telegram_user_id" value={data.user.telegram_user_id} />
         </div>
         <button class="btn btn-md variant-filled-primary">Submit</button>
 
