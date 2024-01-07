@@ -4,8 +4,8 @@ export async function up(db: Kysely<unknown>): Promise<void> {
     await db.schema
         .createTable('user')
         .addColumn('id', 'serial', (col) => col.primaryKey())
-        .addColumn('first_name', 'varchar', (col) => col.notNull())
-        .addColumn('last_name', 'varchar', (col) => col.notNull())
+        .addColumn('first_name', 'varchar(100)', (col) => col.notNull())
+        .addColumn('last_name', 'varchar(100)', (col) => col.notNull())
         .addColumn('description', 'varchar(1000)')
         .addColumn('telegram_user_id', 'varchar(100)')
 
@@ -20,7 +20,7 @@ export async function up(db: Kysely<unknown>): Promise<void> {
         .addColumn('price', 'int4', (col) => col.notNull())
         .addColumn('description', 'varchar(1000)')
         .addColumn('frequency', 'varchar(50)')
-        .addColumn('billing_start', 'varchar')
+        .addColumn('billing_start', 'timestamp')
         .addColumn('telegram_group_id', 'varchar(100)')
 
         .addColumn('created_at', 'timestamp', (col) => col.defaultTo(sql`now()`).notNull())
@@ -65,6 +65,43 @@ export async function up(db: Kysely<unknown>): Promise<void> {
         .addColumn('bill_id', 'integer', (col) => col.references('bill.id').notNull())
         .addColumn('subscriber_id', 'integer', (col) => col.references('subscriber.id').notNull())
         .execute();
+
+    // lucia
+    await db.schema
+        .createTable('auth_user')
+        .addColumn('id', 'varchar(100)', (col) => col.primaryKey())
+        .addColumn('username', 'varchar(500)')
+
+        .addColumn('created_at', 'timestamp', (col) => col.defaultTo(sql`now()`).notNull())
+        .addColumn('deleted_at', 'timestamp')
+        .execute();
+
+    await db.schema
+        .createTable('auth_user_session')
+        .addColumn('id', 'varchar(100)', (col) => col.primaryKey())
+        .addColumn('active_expires', 'int8')
+        .addColumn('idle_expires', 'int8')
+
+        .addColumn('created_at', 'timestamp', (col) => col.defaultTo(sql`now()`).notNull())
+        .addColumn('deleted_at', 'timestamp')
+
+        .addColumn('auth_user_id', 'varchar(100)', (col) =>
+            col.references('auth_user.id').notNull(),
+        )
+        .execute();
+
+    await db.schema
+        .createTable('auth_user_key')
+        .addColumn('id', 'varchar(100)', (col) => col.primaryKey())
+        .addColumn('hashed_password', 'varchar')
+
+        .addColumn('created_at', 'timestamp', (col) => col.defaultTo(sql`now()`).notNull())
+        .addColumn('deleted_at', 'timestamp')
+
+        .addColumn('auth_user_id', 'varchar(100)', (col) =>
+            col.references('auth_user.id').notNull(),
+        )
+        .execute();
 }
 
 export async function down(db: Kysely<unknown>): Promise<void> {
@@ -73,4 +110,8 @@ export async function down(db: Kysely<unknown>): Promise<void> {
     await db.schema.dropTable('subscriber').execute();
     await db.schema.dropTable('resource').execute();
     await db.schema.dropTable('user').execute();
+    // lucia
+    await db.schema.dropTable('auth_user_key').execute();
+    await db.schema.dropTable('auth_user_session').execute();
+    await db.schema.dropTable('auth_user').execute();
 }

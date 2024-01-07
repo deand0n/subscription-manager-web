@@ -8,6 +8,9 @@ export interface Database {
     subscriber: SubscriberTable;
     bill: BillTable;
     bill_subscriber: BillSubscriberTable;
+    auth_user: AuthUserTable;
+    auth_user_session: AuthUserSessionTable;
+    auth_user_key: AuthUserKeyTable;
 }
 
 export interface UserTable {
@@ -93,3 +96,37 @@ export interface BillSubscriberTable {
 export type BillSubscriberSelectable = Selectable<BillSubscriberTable>;
 export type BillSubscriberInsertable = Insertable<BillSubscriberTable>;
 export type BillSubscriberUpdateable = Updateable<BillSubscriberTable>;
+
+// lucia
+
+export interface AuthUserTable {
+    id: string;
+
+    username: string;
+
+    created_at: ColumnType<Date, string | undefined, never>;
+    deleted_at: ColumnType<Date | undefined, never, string | undefined>;
+}
+
+export interface AuthUserSessionTable {
+    id: string;
+
+    active_expires: number;
+    idle_expires: number;
+
+    created_at: ColumnType<Date, string | undefined, never>;
+    deleted_at: ColumnType<Date | undefined, never, string | undefined>;
+
+    auth_user_id: string;
+}
+
+export interface AuthUserKeyTable {
+    id: string;
+
+    hashed_password?: string;
+
+    created_at: ColumnType<Date, string | undefined, never>;
+    deleted_at: ColumnType<Date | undefined, never, string | undefined>;
+
+    auth_user_id: string;
+}
