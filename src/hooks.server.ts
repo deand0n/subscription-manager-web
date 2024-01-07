@@ -43,22 +43,22 @@ process.env.TZ = 'UTC';
 //     return await resolve(event);
 //   };
 
-const handleTheme: Handle = async ({ event, resolve }) => {
-    let theme = '';
+// const handleTheme: Handle = async ({ event, resolve }) => {
+//     let theme = '';
 
-    const cookieTheme = event.cookies.get('theme');
+//     const cookieTheme = event.cookies.get('theme');
 
-    if (cookieTheme) {
-        theme = cookieTheme;
-    } else {
-        event.cookies.set('theme', 'skeleton', { path: '/' });
-        theme = 'skeleton';
-    }
+//     if (cookieTheme) {
+//         theme = cookieTheme;
+//     } else {
+//         event.cookies.set('theme', 'skeleton', { path: '/' });
+//         theme = 'skeleton';
+//     }
 
-    return await resolve(event, {
-        transformPageChunk: ({ html }) => html.replace('data-theme=""', `data-theme="${theme}"`),
-    });
-};
+//     return await resolve(event, {
+//         transformPageChunk: ({ html }) => html.replace('data-theme=""', `data-theme="${theme}"`),
+//     });
+// };
 export const handle: Handle = async ({ event, resolve }) => {
     // handleTheme({ event, resolve });
     let theme = '';

@@ -70,7 +70,7 @@ export async function up(db: Kysely<unknown>): Promise<void> {
     await db.schema
         .createTable('auth_user')
         .addColumn('id', 'varchar(100)', (col) => col.primaryKey())
-        .addColumn('username', 'varchar(500)')
+        .addColumn('username', 'varchar(500)', (col) => col.unique())
 
         .addColumn('created_at', 'timestamp', (col) => col.defaultTo(sql`now()`).notNull())
         .addColumn('deleted_at', 'timestamp')
@@ -85,9 +85,7 @@ export async function up(db: Kysely<unknown>): Promise<void> {
         .addColumn('created_at', 'timestamp', (col) => col.defaultTo(sql`now()`).notNull())
         .addColumn('deleted_at', 'timestamp')
 
-        .addColumn('auth_user_id', 'varchar(100)', (col) =>
-            col.references('auth_user.id').notNull(),
-        )
+        .addColumn('user_id', 'varchar(100)', (col) => col.references('auth_user.id').notNull())
         .execute();
 
     await db.schema
@@ -98,9 +96,7 @@ export async function up(db: Kysely<unknown>): Promise<void> {
         .addColumn('created_at', 'timestamp', (col) => col.defaultTo(sql`now()`).notNull())
         .addColumn('deleted_at', 'timestamp')
 
-        .addColumn('auth_user_id', 'varchar(100)', (col) =>
-            col.references('auth_user.id').notNull(),
-        )
+        .addColumn('user_id', 'varchar(100)', (col) => col.references('auth_user.id').notNull())
         .execute();
 }
 

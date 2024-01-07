@@ -6,11 +6,11 @@
 <div>
     <form class="form flex flex-col gap-4" method="post">
         <div class="flex flex-col">
-            <label for="name" class="block"> First Name </label>
+            <label for="first_name" class="block"> First Name </label>
             <input required class="input" name="first_name" />
         </div>
         <div class="flex flex-col">
-            <label for="price" class="block"> Last Name </label>
+            <label for="last_name" class="block"> Last Name </label>
             <input required class="input" name="last_name" />
         </div>
         <div class="flex flex-col">

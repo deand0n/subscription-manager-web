@@ -42,6 +42,10 @@
                 Theme
                 <span class="material-symbols-outlined"> arrow_drop_down </span>
             </button>
+
+            <form action="/?/logout" method="POST">
+                <button class="btn">logout</button>
+            </form>
         </div>
     </svelte:fragment>
 </AppBar>
