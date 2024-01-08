@@ -8,12 +8,15 @@ declare global {
         }
         // interface PageData {}
         // interface Platform {}
-        type Auth = import('$lib/server/lucia').Auth;
+    }
+    namespace Lucia {
+        type Auth = import('$lib/server/lucia').CustomAuth;
         type DatabaseUserAttributes = {
             username: string;
             password: string;
         };
-        type DatabaseSessionAttributes = object;
+        // eslint-disable-next-line @typescript-eslint/ban-types
+        type DatabaseSessionAttributes = {};
     }
 }
 

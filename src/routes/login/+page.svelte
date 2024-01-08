@@ -12,7 +12,7 @@
             </div>
             <div class="flex flex-col">
                 <label for="password" class="block"> Password </label>
-                <input required class="input" name="password" />
+                <input required class="input" name="password" type="password" />
             </div>
             <button class="btn btn-md variant-filled-primary">Submit</button>
         </form>

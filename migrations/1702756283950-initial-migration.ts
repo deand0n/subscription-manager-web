@@ -11,6 +11,10 @@ export async function up(db: Kysely<unknown>): Promise<void> {
 
         .addColumn('created_at', 'timestamp', (col) => col.defaultTo(sql`now()`).notNull())
         .addColumn('deleted_at', 'timestamp')
+
+        .addColumn('auth_user_id', 'varchar(100)', (col) =>
+            col.references('auth_user.id').notNull(),
+        )
         .execute();
 
     await db.schema
@@ -27,6 +31,9 @@ export async function up(db: Kysely<unknown>): Promise<void> {
         .addColumn('deleted_at', 'timestamp')
 
         .addColumn('owner_id', 'integer', (col) => col.references('user.id').notNull())
+        .addColumn('auth_user_id', 'varchar(100)', (col) =>
+            col.references('auth_user.id').notNull(),
+        )
         .execute();
 
     await db.schema
@@ -77,10 +84,9 @@ export async function up(db: Kysely<unknown>): Promise<void> {
         .execute();
 
     await db.schema
-        .createTable('auth_user_session')
+        .createTable('auth_user_key')
         .addColumn('id', 'varchar(100)', (col) => col.primaryKey())
-        .addColumn('active_expires', 'int8')
-        .addColumn('idle_expires', 'int8')
+        .addColumn('hashed_password', 'varchar')
 
         .addColumn('created_at', 'timestamp', (col) => col.defaultTo(sql`now()`).notNull())
         .addColumn('deleted_at', 'timestamp')
@@ -89,9 +95,10 @@ export async function up(db: Kysely<unknown>): Promise<void> {
         .execute();
 
     await db.schema
-        .createTable('auth_user_key')
+        .createTable('auth_user_session')
         .addColumn('id', 'varchar(100)', (col) => col.primaryKey())
-        .addColumn('hashed_password', 'varchar')
+        .addColumn('active_expires', 'int8')
+        .addColumn('idle_expires', 'int8')
 
         .addColumn('created_at', 'timestamp', (col) => col.defaultTo(sql`now()`).notNull())
         .addColumn('deleted_at', 'timestamp')

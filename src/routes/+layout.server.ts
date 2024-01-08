@@ -1,8 +1,9 @@
 import { redirect } from '@sveltejs/kit';
 import type { LayoutServerLoad } from './$types';
+import { auth } from '../lib/server/lucia';
 
 export const load: LayoutServerLoad = async ({ locals, url }) => {
-    if (url.pathname === '/login') {
+    if (url.pathname === '/login' || url.pathname === '/signup') {
         return;
     }
 
