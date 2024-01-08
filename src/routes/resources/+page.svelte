@@ -13,16 +13,11 @@
     const onEdit = (data: Resource) => {
         goto(`${$page.url.href}/${data.id}`);
     };
-    const onDeleteSelected = (d: Resource[]) => {
-        fetch(`/api/resources/delete`, {
-            method: 'PUT',
-            body: JSON.stringify(d),
-        });
-    };
 </script>
 
 <Table
     data={data.resources}
+    formActionNames={data.tableActions}
     keyLabel={[
         { key: 'name', label: 'Name' },
         { key: 'price', label: 'Price' },
@@ -30,5 +25,4 @@
     ]}
     {onCreate}
     {onEdit}
-    {onDeleteSelected}
 />

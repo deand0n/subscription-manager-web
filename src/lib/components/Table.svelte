@@ -62,14 +62,18 @@
         onEdit?.(data);
     };
 
-    const deleteSelectedClickHandler = () => {
-        onDeleteSelected?.(selectedData);
-
+    const clearDataAfterDelete = () => {
         data = data.filter((res) => {
             return !selectedData.find((r) => r.id === res.id);
         });
         selectedRowElements = [];
         selectedData = [];
+    };
+
+    const deleteSelectedClickHandler = () => {
+        onDeleteSelected?.(selectedData);
+
+        clearDataAfterDelete();
     };
 
     const getButtonFormAction = (formAction?: string) => {
@@ -93,13 +97,16 @@
             }
         }
 
-        return async ({ result }) => {
-            console.log(result);
-            if (result.type === 'redirect') {
-                goto(result.location);
-            } else {
-                await applyAction(result);
+        return async ({ result, update }) => {
+            if (
+                result.type !== 'error' &&
+                formActionNames.deleteSelected &&
+                form.action.search.includes(formActionNames.deleteSelected)
+            ) {
+                clearDataAfterDelete();
             }
+
+            update();
         };
     }}
 >

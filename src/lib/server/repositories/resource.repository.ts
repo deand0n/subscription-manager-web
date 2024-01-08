@@ -116,7 +116,7 @@ export class ResourceRepository {
                 promises.push(
                     transaction
                         .updateTable('resource')
-                        .set(resource)
+                        .set({ deleted_at: resource.deleted_at })
                         .where('id', '=', resource.id)
                         .execute(),
                 );

@@ -1,3 +1,4 @@
+import type { User } from '../../lib/@types/user';
 import { userRepository } from '../../lib/serviceLocator';
 import type { Actions, PageServerLoad } from './$types';
 
@@ -13,7 +14,7 @@ export const load: PageServerLoad = async () => {
 export const actions = {
     tableDeleteSelected: async (event) => {
         const formData = await event.request.formData();
-        const data = formData.get('data');
+        const data = JSON.parse(formData.get('data') as string);
 
         if (!data || !Array.isArray(data) || !data.length) {
             return {
@@ -25,7 +26,7 @@ export const actions = {
         await userRepository.batchDelete(data);
 
         return {
-            success: true,
+            success: false,
             message: 'Successfully deleted',
         };
     },
