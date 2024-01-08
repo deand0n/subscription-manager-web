@@ -44,7 +44,7 @@
             </button>
 
             <form action="/?/logout" method="POST">
-                <button class="btn">logout</button>
+                <button class="btn">Logout</button>
             </form>
         </div>
     </svelte:fragment>

@@ -1,4 +1,3 @@
-import type { User } from '../../lib/@types/user';
 import { userRepository } from '../../lib/serviceLocator';
 import type { Actions, PageServerLoad } from './$types';
 
