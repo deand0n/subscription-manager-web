@@ -36,7 +36,11 @@ export class UserRepository {
 
                 user.deleted_at = new Date().toISOString();
                 promises.push(
-                    transaction.updateTable('user').set(user).where('id', '=', user.id).execute(),
+                    transaction
+                        .updateTable('user')
+                        .set({ deleted_at: user.deleted_at })
+                        .where('id', '=', user.id)
+                        .execute(),
                 );
             }
 

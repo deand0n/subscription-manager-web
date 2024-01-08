@@ -1,14 +1,23 @@
 <script lang="ts" generics="T extends Base">
+    import { applyAction, enhance } from '$app/forms';
+    import { goto } from '$app/navigation';
     import type { Base } from '../@types/base';
 
     export let data: T[];
     export let keyLabel: { key: keyof T; label: string }[];
 
+    export let formActionNames: {
+        deleteSelected?: string;
+        edit?: string;
+        create?: string;
+    } = {};
+
     export let onCreate: (() => void) | undefined = undefined;
     export let onEdit: ((data: T) => void) | undefined = undefined;
     export let onDeleteSelected: ((data: T[]) => void) | undefined = undefined;
 
-    let selectedRows: HTMLTableRowElement[] = [];
+    let selectedRowElements: HTMLTableRowElement[] = [];
+    let selectedData: T[] = [];
 
     const rowClickHandler = (event: MouseEvent) => {
         const t = event.target as HTMLTableCellElement;
@@ -16,12 +25,32 @@
 
         const isChecked = parentElement.classList.contains('table-row-checked');
 
-        if (isChecked) {
-            parentElement.classList.remove('table-row-checked');
-            selectedRows = selectedRows.filter((row) => row.rowIndex !== parentElement.rowIndex);
-        } else {
+        const addElement = () => {
             parentElement.classList.add('table-row-checked');
-            selectedRows = [...selectedRows, parentElement];
+            selectedRowElements = [...selectedRowElements, parentElement];
+
+            // add data
+            const id = +(parentElement.firstChild as HTMLElement).innerText;
+            const obj = data.find((o) => o.id === id);
+            if (!obj) {
+                return;
+            }
+            selectedData.push(obj);
+        };
+        const removeElement = () => {
+            parentElement.classList.remove('table-row-checked');
+            selectedRowElements = selectedRowElements.filter(
+                (row) => row.rowIndex !== parentElement.rowIndex,
+            );
+
+            const id = +(parentElement.firstChild as HTMLElement).innerText;
+            selectedData = selectedData.filter((o) => o.id !== id);
+        };
+
+        if (isChecked) {
+            removeElement();
+        } else {
+            addElement();
         }
     };
 
@@ -34,85 +63,111 @@
     };
 
     const deleteSelectedClickHandler = () => {
-        const rows: T[] = [];
-
-        for (const row of selectedRows) {
-            // first child is column with ID
-            const id = +(row.firstChild as HTMLElement).innerText;
-            const resource = data.find((resource) => resource.id === id);
-            if (!resource) {
-                continue;
-            }
-            rows.push(resource);
-        }
-
-        onDeleteSelected?.(rows);
+        onDeleteSelected?.(selectedData);
 
         data = data.filter((res) => {
-            return !rows.find((r) => r.id === res.id);
+            return !selectedData.find((r) => r.id === res.id);
         });
-        selectedRows = [];
+        selectedRowElements = [];
+        selectedData = [];
+    };
+
+    const getButtonFormAction = (formAction?: string) => {
+        return formAction ? `?/${formAction}` : '';
     };
 </script>
 
-<div class="table-container">
-    <table class="table table-comfortable table-interactive">
-        <thead>
-            <tr>
-                <th>ID</th>
-                {#each keyLabel as kL}
-                    <th>{kL.label}</th>
-                {/each}
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            {#each data as row}
-                <tr on:click={rowClickHandler}>
-                    <td>{row.id}</td>
-                    {#each keyLabel as a}
-                        <td>{row[a.key] ?? 'None'}</td>
+<form
+    method="post"
+    use:enhance={(form) => {
+        console.log(form);
+
+        if (!form.action.search) {
+            form.cancel();
+        } else {
+            if (
+                formActionNames.deleteSelected &&
+                form.action.search.includes(formActionNames.deleteSelected)
+            ) {
+                form.formData.append('data', JSON.stringify(selectedData));
+            }
+        }
+
+        return async ({ result }) => {
+            console.log(result);
+            if (result.type === 'redirect') {
+                goto(result.location);
+            } else {
+                await applyAction(result);
+            }
+        };
+    }}
+>
+    <div class="table-container">
+        <table class="table table-comfortable table-interactive">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    {#each keyLabel as kL}
+                        <th>{kL.label}</th>
                     {/each}
-                    <td>
-                        {#if onEdit}
-                            <button
-                                class="btn variant-filled-primary"
-                                on:click|stopPropagation={() => editClickHandler(row)}
-                            >
-                                Edit
-                            </button>
-                        {/if}
-                    </td>
+                    <th>Actions</th>
                 </tr>
-            {/each}
-        </tbody>
-        <tfoot>
-            <tr>
-                <th colspan="100" class="w-full">
-                    <div class="flex flex-row justify-between items-center">
-                        <div>Total rows selected: {selectedRows.length}</div>
-                        <div>
-                            {#if onCreate}
+            </thead>
+            <tbody>
+                {#each data as row}
+                    <tr on:click={rowClickHandler}>
+                        <td>{row.id}</td>
+                        {#each keyLabel as kl}
+                            <td>{row[kl.key] ?? 'None'}</td>
+                        {/each}
+                        <td>
+                            {#if onEdit || formActionNames.edit}
                                 <button
                                     class="btn variant-filled-primary"
-                                    on:click={createClickHandler}
+                                    on:click|stopPropagation={() => onEdit && editClickHandler(row)}
+                                    formaction={getButtonFormAction(formActionNames.edit)}
                                 >
-                                    Create
+                                    Edit
                                 </button>
                             {/if}
+                        </td>
+                    </tr>
+                {/each}
+            </tbody>
+            <tfoot>
+                <tr>
+                    <th colspan="100" class="w-full">
+                        <div class="flex flex-row justify-between items-center">
+                            <div>Total rows selected: {selectedRowElements.length}</div>
+                            <div>
+                                {#if onCreate || formActionNames.edit}
+                                    <button
+                                        class="btn variant-filled-primary"
+                                        on:click={() => onCreate && createClickHandler()}
+                                        formaction={getButtonFormAction(formActionNames.create)}
+                                    >
+                                        Create
+                                    </button>
+                                {/if}
 
-                            {#if onDeleteSelected}
-                                <button
-                                    class="btn variant-filled-error"
-                                    on:click={deleteSelectedClickHandler}
-                                >
-                                    Delete selected
-                                </button>
-                            {/if}
+                                {#if onDeleteSelected || formActionNames.deleteSelected}
+                                    <button
+                                        class="btn variant-filled-error"
+                                        on:click={() =>
+                                            onDeleteSelected && deleteSelectedClickHandler()}
+                                        formaction={getButtonFormAction(
+                                            formActionNames.deleteSelected,
+                                        )}
+                                    >
+                                        Delete selected
+                                    </button>
+                                {/if}
+                            </div>
                         </div>
-                    </div>
-                </th>
-            </tr>
-        </tfoot>
-    </table>
-</div>
+                    </th>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</form>

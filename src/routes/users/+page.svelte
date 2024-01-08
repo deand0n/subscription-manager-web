@@ -13,16 +13,11 @@
     const onEdit = (user: User) => {
         goto(`${$page.url.href}/${user.id}`);
     };
-    const onDeleteSelected = (userList: User[]) => {
-        fetch(`/api/users/delete`, {
-            method: 'PUT',
-            body: JSON.stringify(userList),
-        });
-    };
 </script>
 
 <Table
     data={data.users}
+    formActionNames={data.tableActions}
     keyLabel={[
         { key: 'first_name', label: 'First Name' },
         { key: 'last_name', label: 'Last Name' },
@@ -30,5 +25,4 @@
     ]}
     {onCreate}
     {onEdit}
-    {onDeleteSelected}
 />
