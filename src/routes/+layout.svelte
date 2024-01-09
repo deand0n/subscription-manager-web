@@ -1,8 +1,8 @@
 <script lang="ts">
     import { computePosition, autoUpdate, offset, shift, flip, arrow } from '@floating-ui/dom';
     import './styles.css';
-    import Header from './Header.svelte';
-    import Breadcrumbs from './Breadcrumbs.svelte';
+    import Header from '../lib/components/Header.svelte';
+    import Breadcrumbs from '../lib/components/Breadcrumbs.svelte';
     import { theme } from './store';
     import { browser } from '$app/environment';
     import {

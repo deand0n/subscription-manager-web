@@ -1,6 +1,6 @@
 <script lang="ts">
     import { page } from '$app/stores';
-    import AddBreadcrumb from '../../AddBreadcrumb.svelte';
+    import AddBreadcrumb from '../../../lib/components/AddBreadcrumb.svelte';
 
     const { id } = $page.params;
 

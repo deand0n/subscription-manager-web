@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { breadcrumbs } from './store';
+    import { breadcrumbs } from '../../routes/store';
 </script>
 
 <div class="card px-5 my-5">

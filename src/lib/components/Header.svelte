@@ -1,7 +1,7 @@
 <script lang="ts">
-    import { AppBar, popup, type PopupSettings } from '@skeletonlabs/skeleton';
+    import { AppBar, popup } from '@skeletonlabs/skeleton';
     import { LightSwitch } from '@skeletonlabs/skeleton';
-    import { theme } from './store';
+    import { theme } from '../../routes/store';
     import type { SubmitFunction } from '@sveltejs/kit';
     import { enhance } from '$app/forms';
 

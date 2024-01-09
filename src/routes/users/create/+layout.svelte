@@ -1,5 +1,5 @@
 <script lang="ts">
-    import AddBreadcrumb from '../../AddBreadcrumb.svelte';
+    import AddBreadcrumb from '../../../lib/components/AddBreadcrumb.svelte';
 
     const breadcrumb = {
         label: 'Create User',
