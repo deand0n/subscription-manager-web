@@ -1,7 +1,7 @@
 import { error } from '@sveltejs/kit';
 import { parseResourceFromForm } from '../../../lib/helpers/parseResourcesFromForm';
 import type { Actions, PageServerLoad } from './$types';
-import { resourceRepository } from '../../../lib/serviceLocator';
+import { resourceRepository, userRepository } from '../../../lib/serviceLocator';
 
 export const load: PageServerLoad = async (event) => {
     const resource = await resourceRepository.findById(+event.params.id, false);
@@ -13,9 +13,14 @@ export const load: PageServerLoad = async (event) => {
     }
 
     resource.subscribers ??= [];
+    const users = await userRepository.getAll();
 
     return {
         resource,
+        users,
+        formActionNames: {
+            create: 'subscriberTableCreate',
+        },
     };
 };
 
@@ -33,4 +38,80 @@ export const actions = {
 
         return { success: true };
     },
+    subscriberTableDeleteSelected: async (event) => {
+        const formData = await event.request.formData();
+        const data = JSON.parse(formData.get('data') as string);
+
+        if (!data || !Array.isArray(data) || !data.length) {
+            return {
+                success: false,
+                message: 'something went wronk',
+            };
+        }
+
+        await resourceRepository.batchDelete(data);
+
+        return {
+            success: true,
+            message: 'Successfully deleted',
+        };
+    },
+    subscriberTableEdit: async (event) => {
+        const formData = await event.request.formData();
+        const data = JSON.parse(formData.get('data') as string);
+
+        if (!data || !Array.isArray(data) || !data.length) {
+            return {
+                success: false,
+                message: 'something went wronk',
+            };
+        }
+
+        await resourceRepository.batchDelete(data);
+
+        return {
+            success: true,
+            message: 'Successfully deleted',
+        };
+    },
+    subscriberTableCreate: async (event) => {
+        const formData = await event.request.formData();
+        const data = JSON.parse(formData.get('data') as string);
+        console.log(data);
+
+        if (!data || !Array.isArray(data) || !data.length) {
+            return {
+                success: false,
+                message: 'something went wronk',
+            };
+        }
+
+        // await resourceRepository.batchDelete(data);
+
+        return {
+            success: true,
+            message: 'Successfully deleted',
+        };
+    },
 } satisfies Actions;
+
+// export const actions = {
+//     tableDeleteSelected: async (event) => {
+//         const formData = await event.request.formData();
+//         const data = JSON.parse(formData.get('data') as string);
+
+//         if (!data || !Array.isArray(data) || !data.length) {
+//             return {
+//                 success: false,
+//                 message: 'something went wronk',
+//             };
+//         }
+
+//         await resourceRepository.batchDelete(data);
+
+//         return {
+//             success: true,
+//             message: 'Successfully deleted',
+//         };
+//     },
+// } satisfies Actions;

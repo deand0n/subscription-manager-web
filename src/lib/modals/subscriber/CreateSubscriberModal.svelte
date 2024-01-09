@@ -6,50 +6,22 @@
 
     export let parent: SvelteComponent;
 
-    let users: User[] = [];
-    let autocompleteOptions: AutocompleteOption<string>[] = [];
-
     const modalStore = getModalStore();
+
+    let formActionName: string = $modalStore[0].meta.formActionName;
+
+    let users: User[] = $modalStore[0].meta.users;
+    let autocompleteOptions: AutocompleteOption<string>[] = users.map((user) => {
+        return {
+            label: `${user.first_name} ${user.last_name} ${user.description}`,
+            value: `${user.id}`,
+        };
+    });
 
     const formData: { description?: string; user: { id?: number; label?: string } } = {
         description: undefined,
         user: { id: undefined, label: undefined },
     };
-
-    function handleSubmit(event: MouseEvent): void {
-        if (!formData.user.id || !formData.description) {
-            event.preventDefault();
-            return;
-        }
-
-        fetch(`/api/subscribers`, {
-            method: 'POST',
-            body: JSON.stringify({
-                resource_id: +$modalStore[0].meta.resource_id,
-                user_id: +formData.user.id,
-                description: formData.description,
-            }),
-        })
-            .then(async (response) => {
-                const res = await response.json();
-                $modalStore[0].response?.(res);
-            })
-            .catch((err) => console.log(err))
-            .finally(() => modalStore.close());
-    }
-
-    fetch(`/api/users`, {
-        method: 'GET',
-    }).then(async (res) => {
-        users = (await res.json()).users;
-
-        autocompleteOptions = users.map((user) => {
-            return {
-                label: `${user.first_name} ${user.last_name} ${user.description}`,
-                value: `${user.id}`,
-            };
-        });
-    });
 
     const onSelection = (event: CustomEvent<AutocompleteOption<string>>) => {
         formData.user.label = event.detail.label;
@@ -62,8 +34,35 @@
         <header class="text-2xl font-bold">Add subscriber</header>
 
         <form
+            method="post"
             class="modal-form border border-surface-500 p-4 space-y-4 rounded-container-token"
-            use:enhance
+            use:enhance={(form) => {
+                if (!formData.user.id || !formData.description) {
+                    form.cancel();
+                    return;
+                }
+
+                form.formData.append(
+                    'data',
+                    JSON.stringify({
+                        resource_id: +$modalStore[0].meta.resource_id,
+                        user_id: +formData.user.id,
+                        description: formData.description,
+                    }),
+                );
+
+                return async ({ update, result }) => {
+                    if (result.type === 'success') {
+                        $modalStore[0].response?.({
+                            resource_id: +$modalStore[0].meta.resource_id,
+                            user_id: formData.user.id,
+                            description: formData.description,
+                        });
+                    }
+
+                    update();
+                };
+            }}
         >
             <label class="label">
                 <span>Description</span>
@@ -80,14 +79,23 @@
                     />
                 {/if}
             </label>
+
+            <footer class="modal-footer">
+                <button
+                    class="btn {parent.buttonNeutral}"
+                    type="button"
+                    on:click={() => modalStore.close()}
+                >
+                    {parent.buttonTextCancel}
+                </button>
+                <button
+                    class="btn {parent.buttonPositive}"
+                    formaction="?/{formActionName}"
+                    on:click={() => modalStore.close()}
+                >
+                    {parent.buttonTextSubmit}
+                </button>
+            </footer>
         </form>
-        <footer class="modal-footer">
-            <button class="btn {parent.buttonNeutral}">
-                {parent.buttonTextCancel}
-            </button>
-            <button class="btn {parent.buttonPositive}" on:click={handleSubmit}>
-                {parent.buttonTextSubmit}
-            </button>
-        </footer>
     </div>
 {/if}

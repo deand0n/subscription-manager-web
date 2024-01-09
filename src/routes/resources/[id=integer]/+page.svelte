@@ -17,8 +17,16 @@
         const modalSettings: ModalSettings = {
             type: 'component',
             component: 'createSubscriberModal',
-            meta: { resource_id: data.resource.id },
+            meta: {
+                resource_id: data.resource.id,
+                users: data.users,
+                formActionName: data.formActionNames.create,
+            },
             response: (subscriber: Subscriber) => {
+                if (!subscriber) {
+                    return;
+                }
+
                 subscribers = [...subscribers, subscriber];
                 calculatePricePerSubscriber();
             },
