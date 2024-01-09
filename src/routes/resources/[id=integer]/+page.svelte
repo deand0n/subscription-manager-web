@@ -38,7 +38,7 @@
         const modalSettings: ModalSettings = {
             type: 'component',
             component: 'editSubscriberModal',
-            meta: { subscriber: subscriber },
+            meta: { subscriber: subscriber, formActionName: data.formActionNames.edit },
             response: (newSubscriber?: Subscriber) => {
                 if (!newSubscriber) {
                     return;

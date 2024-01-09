@@ -61,6 +61,8 @@
                     }
 
                     update();
+
+                    modalStore.close();
                 };
             }}
         >
@@ -88,11 +90,7 @@
                 >
                     {parent.buttonTextCancel}
                 </button>
-                <button
-                    class="btn {parent.buttonPositive}"
-                    formaction="?/{formActionName}"
-                    on:click={() => modalStore.close()}
-                >
+                <button class="btn {parent.buttonPositive}" formaction="?/{formActionName}">
                     {parent.buttonTextSubmit}
                 </button>
             </footer>

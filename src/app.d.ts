@@ -13,7 +13,6 @@ declare global {
         type Auth = import('$lib/server/lucia').CustomAuth;
         type DatabaseUserAttributes = {
             username: string;
-            password: string;
         };
         // eslint-disable-next-line @typescript-eslint/ban-types
         type DatabaseSessionAttributes = {};

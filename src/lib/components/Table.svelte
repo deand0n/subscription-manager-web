@@ -1,6 +1,5 @@
 <script lang="ts" generics="T extends Base">
-    import { applyAction, enhance } from '$app/forms';
-    import { goto } from '$app/navigation';
+    import { enhance } from '$app/forms';
     import type { Base } from '../@types/base';
 
     export let data: T[];
@@ -37,6 +36,7 @@
             }
             selectedData.push(obj);
         };
+
         const removeElement = () => {
             parentElement.classList.remove('table-row-checked');
             selectedRowElements = selectedRowElements.filter(
@@ -84,8 +84,6 @@
 <form
     method="post"
     use:enhance={(form) => {
-        console.log(form);
-
         if (!form.action.search) {
             form.cancel();
         } else {
