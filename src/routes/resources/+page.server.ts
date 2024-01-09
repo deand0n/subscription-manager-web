@@ -1,9 +1,9 @@
-import { resourceRepository } from '../../lib/serviceLocator';
+import { resourceService } from '../../lib/serviceLocator';
 import type { Actions, PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async () => {
     return {
-        resources: await resourceRepository.getAll(false),
+        resources: await resourceService.getAll(false),
         tableActions: {
             deleteSelected: 'tableDeleteSelected',
         },
@@ -22,7 +22,7 @@ export const actions = {
             };
         }
 
-        await resourceRepository.batchDelete(data);
+        await resourceService.batchDelete(data);
 
         return {
             success: true,

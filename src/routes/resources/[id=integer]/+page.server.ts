@@ -1,14 +1,10 @@
 import { error } from '@sveltejs/kit';
 import { parseResourceFromForm } from '../../../lib/helpers/parseResourcesFromForm';
 import type { Actions, PageServerLoad } from './$types';
-import {
-    resourceRepository,
-    subscriberRepository,
-    userRepository,
-} from '../../../lib/serviceLocator';
+import { resourceService, subscriberRepository, userRepository } from '../../../lib/serviceLocator';
 
 export const load: PageServerLoad = async (event) => {
-    const resource = await resourceRepository.findById(+event.params.id, false);
+    const resource = await resourceService.findById(+event.params.id, false);
 
     if (!resource) {
         error(404, {
@@ -40,7 +36,7 @@ export const actions = {
             return { success: false, message: 'Some values were not provided' };
         }
 
-        await resourceRepository.update(+event.params.id, result.data);
+        await resourceService.update(+event.params.id, result.data);
 
         return { success: true };
     },

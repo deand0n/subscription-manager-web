@@ -1,6 +1,6 @@
 import type { Actions } from '../$types';
 import { parseResourceFromForm } from '../../../lib/helpers/parseResourcesFromForm';
-import { userRepository, resourceRepository } from '../../../lib/serviceLocator';
+import { userRepository, resourceService } from '../../../lib/serviceLocator';
 import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async () => {
@@ -19,7 +19,7 @@ export const actions = {
             return { success: false, message: 'Some values were not provided' };
         }
 
-        await resourceRepository.create({ ...result.data });
+        await resourceService.create({ ...result.data });
 
         return { success: true };
     },

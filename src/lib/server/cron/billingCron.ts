@@ -1,14 +1,14 @@
 import { createLogger } from '../../logger/logger';
-import { resourceRepository, billRepository, billSubscriberRepository } from '../../serviceLocator';
+import { resourceService, billRepository, billSubscriberRepository } from '../../serviceLocator';
 import { bot } from '../telegram/bot';
 
 export const checkBilling = async () => {
     const logger = createLogger('BillingCron');
 
-    const resources = await resourceRepository.getAll();
+    const resources = await resourceService.getAll();
 
     for (const resource of resources) {
-        const isBilled = await resourceRepository.isBilled(
+        const isBilled = await resourceService.isBilled(
             resource.id,
             resource.billing_start,
             resource.frequency,
