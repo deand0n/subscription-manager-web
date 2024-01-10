@@ -1,7 +1,10 @@
 import { error } from '@sveltejs/kit';
 import { parseResourceFromForm } from '../../../lib/helpers/parseResourcesFromForm';
 import type { Actions, PageServerLoad } from './$types';
-import { resourceService, subscriberRepository, userRepository } from '../../../lib/serviceLocator';
+import { subscriberRepository, userRepository } from '../../../lib/serviceLocator';
+import { ResourceService } from '../../../lib/server/services/resource.service';
+
+const resourceService = new ResourceService();
 
 export const load: PageServerLoad = async (event) => {
     const resource = await resourceService.findById(+event.params.id, false);

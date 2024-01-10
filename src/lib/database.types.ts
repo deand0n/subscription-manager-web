@@ -22,6 +22,7 @@ export interface UserTable {
 
     created_at: ColumnType<Date, string | undefined, never>;
     deleted_at: ColumnType<Date | undefined, never, string | undefined>;
+    auth_user_id: string;
 }
 
 export type UserSelectable = Selectable<UserTable>;
@@ -46,6 +47,7 @@ export interface ResourceTable {
     deleted_at: ColumnType<Date | undefined, never, string | undefined>;
 
     owner_id: number;
+    auth_user_id: string;
 }
 
 export type ResourceSelectable = Selectable<ResourceTable>;
@@ -117,7 +119,7 @@ export interface AuthUserSessionTable {
     created_at: ColumnType<Date, string | undefined, never>;
     deleted_at: ColumnType<Date | undefined, never, string | undefined>;
 
-    auth_user_id: string;
+    user_id: string;
 }
 
 export interface AuthUserKeyTable {
@@ -128,5 +130,5 @@ export interface AuthUserKeyTable {
     created_at: ColumnType<Date, string | undefined, never>;
     deleted_at: ColumnType<Date | undefined, never, string | undefined>;
 
-    auth_user_id: string;
+    user_id: string;
 }

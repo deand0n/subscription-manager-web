@@ -100,7 +100,18 @@ export class ResourceRepository {
     }
 
     update(id: number, updateWith: ResourceUpdateable) {
-        return db.updateTable('resource').set(updateWith).where('id', '=', id).execute();
+        return db
+            .updateTable('resource')
+            .set({
+                name: updateWith.name,
+                price: updateWith.price,
+                description: updateWith.description,
+                frequency: updateWith.frequency,
+                billing_start: updateWith.billing_start,
+                telegram_group_id: updateWith.telegram_group_id,
+            })
+            .where('id', '=', id)
+            .execute();
     }
 
     batchDelete(updateWith: ResourceUpdateable[]) {
