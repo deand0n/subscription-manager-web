@@ -38,7 +38,12 @@ export class ResourceRepository {
             .executeTakeFirst();
     }
 
-    async isBilled(id: number, billing_start: Date | string, frequency: ResourceFrequency) {
+    async isBilled(
+        auth_user_id: string,
+        id: number,
+        billing_start: Date | string,
+        frequency: ResourceFrequency,
+    ) {
         const getBoundary = () => {
             if (frequency === ResourceFrequency.MONTHLY) {
                 return {
@@ -66,6 +71,8 @@ export class ResourceRepository {
             .where('bill.deleted_at', 'is', null)
             .where('bill.created_at', '>=', lowerBoundary)
             .where('bill.created_at', '<=', upperBoundary)
+            .innerJoin('resource', 'resource.id', 'bill.resource_id')
+            .where('resource.auth_user_id', '=', auth_user_id)
             .executeTakeFirst();
 
         return !!bill;
