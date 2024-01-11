@@ -60,12 +60,4 @@ export class SubscriberRepository {
             return await Promise.all(promises);
         });
     }
-
-    delete(id: number) {
-        return db
-            .updateTable('subscriber')
-            .set({ deleted_at: new Date().toISOString() })
-            .where('id', '=', id)
-            .executeTakeFirst();
-    }
 }

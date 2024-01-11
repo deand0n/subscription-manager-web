@@ -51,18 +51,6 @@
         };
         modalStore.trigger(modalSettings);
     };
-    const onDeleteSelected = (subscriberList: Subscriber[]) => {
-        fetch(`/api/subscribers/delete`, {
-            method: 'PUT',
-            body: JSON.stringify(subscriberList),
-        }).then(() => {
-            const filteredArray = subscribers.filter(
-                (obj1) => !subscriberList.some((obj2) => obj2.id === obj1.id),
-            );
-
-            subscribers = filteredArray;
-        });
-    };
 
     const calculatePricePerSubscriber = () => {
         if (!subscribers.length) {
@@ -140,7 +128,6 @@
                 ]}
                 {onCreate}
                 {onEdit}
-                {onDeleteSelected}
             />
             {#if pricePerSubscriber}
                 <div class="alert variant-ghost">

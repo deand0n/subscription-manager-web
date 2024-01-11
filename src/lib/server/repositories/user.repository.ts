@@ -4,28 +4,40 @@ import type { UpdateResult } from 'kysely';
 import type { User } from '../../@types/user';
 
 export class UserRepository {
-    findById(id: number): Promise<User | undefined> {
+    findById(auth_user_id: string, id: number): Promise<User | undefined> {
         return db
             .selectFrom('user')
             .where('id', '=', id)
             .where('deleted_at', 'is', null)
+            .where('user.auth_user_id', '=', auth_user_id)
             .selectAll()
             .executeTakeFirst();
     }
 
-    getAll() {
-        return db.selectFrom('user').where('deleted_at', 'is', null).selectAll().execute();
+    getAll(auth_user_id: string): Promise<User[]> {
+        return db
+            .selectFrom('user')
+            .where('deleted_at', 'is', null)
+            .where('user.auth_user_id', '=', auth_user_id)
+            .selectAll()
+            .execute();
     }
 
     create(user: UserInsertable): Promise<User | undefined> {
         return db.insertInto('user').values(user).returningAll().executeTakeFirstOrThrow();
     }
 
-    update(id: number, updateWith: UserUpdateable) {
-        return db.updateTable('user').set(updateWith).where('id', '=', id).execute();
+    update(auth_user_id: string, id: number, updateWith: UserUpdateable) {
+        return db
+            .updateTable('user')
+            .set(updateWith)
+            .where('id', '=', id)
+            .where('deleted_at', 'is', null)
+            .where('user.auth_user_id', '=', auth_user_id)
+            .execute();
     }
 
-    batchDelete(updateWith: UserUpdateable[]) {
+    batchDelete(auth_user_id: string, updateWith: UserUpdateable[]) {
         return db.transaction().execute(async (transaction) => {
             const promises: Promise<UpdateResult[]>[] = [];
 
@@ -40,19 +52,13 @@ export class UserRepository {
                         .updateTable('user')
                         .set({ deleted_at: user.deleted_at })
                         .where('id', '=', user.id)
+                        .where('deleted_at', 'is', null)
+                        .where('user.auth_user_id', '=', auth_user_id)
                         .execute(),
                 );
             }
 
             return await Promise.all(promises);
         });
-    }
-
-    delete(id: number) {
-        return db
-            .updateTable('user')
-            .set({ deleted_at: new Date().toISOString() })
-            .where('id', '=', id)
-            .executeTakeFirst();
     }
 }

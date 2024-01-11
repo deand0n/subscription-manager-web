@@ -115,12 +115,4 @@ export class BillSubscriberRepository {
             return await Promise.all(promises);
         });
     }
-
-    async delete(id: number) {
-        return db
-            .updateTable('bill_subscriber')
-            .set({ deleted_at: new Date().toISOString() })
-            .where('id', '=', id)
-            .executeTakeFirst();
-    }
 }

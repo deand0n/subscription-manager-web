@@ -43,12 +43,4 @@ export class BillRepository {
             return await Promise.all(promises);
         });
     }
-
-    async delete(id: number) {
-        return db
-            .updateTable('bill')
-            .set({ deleted_at: new Date().toISOString() })
-            .where('id', '=', id)
-            .executeTakeFirst();
-    }
 }

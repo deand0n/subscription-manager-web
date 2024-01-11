@@ -4,9 +4,11 @@ import { getAuthUserIdFromCookies } from '../../../lib/server/helpers/getAuthUse
 import { userRepository, resourceRepository } from '../../../lib/serviceLocator';
 import type { PageServerLoad } from './$types';
 
-export const load: PageServerLoad = async () => {
+export const load: PageServerLoad = async (event) => {
+    const auth_user_id = await getAuthUserIdFromCookies(event.cookies, event.locals.auth);
+
     return {
-        users: await userRepository.getAll(),
+        users: await userRepository.getAll(auth_user_id),
     };
 };
 

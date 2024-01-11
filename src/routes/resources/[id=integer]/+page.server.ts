@@ -20,7 +20,7 @@ export const load: PageServerLoad = async (event) => {
     }
 
     resource.subscribers ??= [];
-    const users = await userRepository.getAll();
+    const users = await userRepository.getAll(auth_user_id);
 
     return {
         resource,
