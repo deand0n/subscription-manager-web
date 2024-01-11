@@ -63,8 +63,11 @@ export class BillSubscriberRepository {
             .executeTakeFirstOrThrow();
     }
 
-    async createFromBill(bill: Bill) {
-        const subscribers = await subscriberRepository.getAllByResourceId(bill.resource_id);
+    async createFromBill(auth_user_id: string, bill: Bill) {
+        const subscribers = await subscriberRepository.getAllByResourceId(
+            auth_user_id,
+            bill.resource_id,
+        );
 
         if (!subscribers.length) {
             this.logger.warn(`Resource id "${bill.resource_id}" has no subscribers`);

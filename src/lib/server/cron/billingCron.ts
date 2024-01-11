@@ -34,7 +34,7 @@ export const checkBilling = async () => {
             });
             logger.log(`Bill id: ${bill.id} was created for resource id: ${resource.id}`);
 
-            await billSubscriberRepository.createFromBill(bill);
+            await billSubscriberRepository.createFromBill(auth_user.id, bill);
 
             logger.log(
                 `Bills for subscribers was created for resource. resource_id: ${resource.id}, bill_id: ${bill.id}`,

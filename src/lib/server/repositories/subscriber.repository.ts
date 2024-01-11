@@ -4,26 +4,36 @@ import type { SubscriberInsertable, SubscriberUpdateable } from '../../database.
 import type { Subscriber } from '../../@types/subscriber';
 
 export class SubscriberRepository {
-    async findById(id: number): Promise<Subscriber | undefined> {
+    async findById(auth_user_id: string, id: number): Promise<Subscriber | undefined> {
         return db
             .selectFrom('subscriber')
             .where('id', '=', id)
             .where('deleted_at', 'is', null)
-            .selectAll()
+            .innerJoin('resource', 'resource.id', 'subscriber.resource_id')
+            .where('resource.auth_user_id', '=', auth_user_id)
+            .selectAll('subscriber')
             .executeTakeFirst();
     }
 
-    async getAllByResourceId(resource_id: number): Promise<Subscriber[]> {
+    async getAllByResourceId(auth_user_id: string, resource_id: number): Promise<Subscriber[]> {
         return db
             .selectFrom('subscriber')
             .where('deleted_at', 'is', null)
             .where('resource_id', '=', resource_id)
-            .selectAll()
+            .innerJoin('resource', 'resource.id', 'subscriber.resource_id')
+            .where('resource.auth_user_id', '=', auth_user_id)
+            .selectAll('subscriber')
             .execute();
     }
 
-    async getAll() {
-        return db.selectFrom('subscriber').where('deleted_at', 'is', null).selectAll().execute();
+    async getAll(auth_user_id: string) {
+        return db
+            .selectFrom('subscriber')
+            .where('deleted_at', 'is', null)
+            .innerJoin('resource', 'resource.id', 'subscriber.resource_id')
+            .where('resource.auth_user_id', '=', auth_user_id)
+            .selectAll('subscriber')
+            .execute();
     }
 
     create(subscriber: SubscriberInsertable): Promise<Subscriber | undefined> {
@@ -34,11 +44,18 @@ export class SubscriberRepository {
             .executeTakeFirstOrThrow();
     }
 
-    update(id: number, updateWith: SubscriberUpdateable) {
-        return db.updateTable('subscriber').set(updateWith).where('id', '=', id).execute();
+    update(auth_user_id: string, id: number, updateWith: SubscriberUpdateable) {
+        return db
+            .updateTable('subscriber')
+            .set({ description: updateWith.description })
+            .where('id', '=', id)
+            .where('deleted_at', 'is', null)
+            .innerJoin('resource', 'resource.id', 'subscriber.resource_id')
+            .where('resource.auth_user_id', '=', auth_user_id)
+            .execute();
     }
 
-    batchDelete(updateWith: SubscriberUpdateable[]) {
+    batchDelete(auth_user_id: string, updateWith: SubscriberUpdateable[]) {
         return db.transaction().execute(async (transaction) => {
             const promises: Promise<UpdateResult[]>[] = [];
 
@@ -53,6 +70,9 @@ export class SubscriberRepository {
                         .updateTable('subscriber')
                         .set(subscriber)
                         .where('id', '=', subscriber.id)
+                        .where('deleted_at', 'is', null)
+                        .innerJoin('resource', 'resource.id', 'subscriber.resource_id')
+                        .where('resource.auth_user_id', '=', auth_user_id)
                         .execute(),
                 );
             }

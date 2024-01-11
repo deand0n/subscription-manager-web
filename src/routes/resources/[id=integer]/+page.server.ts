@@ -49,6 +49,7 @@ export const actions = {
         return { success: true };
     },
     subscriberTableDeleteSelected: async (event) => {
+        const auth_user_id = await getAuthUserIdFromCookies(event.cookies, event.locals.auth);
         const formData = await event.request.formData();
         const data = JSON.parse(formData.get('data') as string);
 
@@ -59,7 +60,7 @@ export const actions = {
             };
         }
 
-        await subscriberRepository.batchDelete(data);
+        await subscriberRepository.batchDelete(auth_user_id, data);
 
         return {
             success: true,
@@ -67,6 +68,7 @@ export const actions = {
         };
     },
     subscriberTableEdit: async (event) => {
+        const auth_user_id = await getAuthUserIdFromCookies(event.cookies, event.locals.auth);
         const formData = await event.request.formData();
         const data = JSON.parse(formData.get('data') as string);
 
@@ -77,7 +79,7 @@ export const actions = {
             };
         }
 
-        await subscriberRepository.update(data.id, data);
+        await subscriberRepository.update(auth_user_id, data.id, data);
 
         return {
             success: true,
