@@ -2,8 +2,11 @@ import type { UpdateResult } from 'kysely';
 import { db } from '../../../../database';
 import type { SubscriberInsertable, SubscriberUpdateable } from '../../database.types';
 import type { Subscriber } from '../../@types/subscriber';
+import { createLogger } from '../../logger/logger';
 
 export class SubscriberRepository {
+    private logger = createLogger(SubscriberRepository.name);
+
     async findById(auth_user_id: string, id: number): Promise<Subscriber | undefined> {
         return db
             .selectFrom('subscriber')
@@ -36,7 +39,24 @@ export class SubscriberRepository {
             .execute();
     }
 
-    create(subscriber: SubscriberInsertable): Promise<Subscriber | undefined> {
+    async create(
+        auth_user_id: string,
+        subscriber: SubscriberInsertable,
+    ): Promise<Subscriber | undefined> {
+        const resource = await db
+            .selectFrom('resource')
+            .select(['id'])
+            .where('resource.id', '=', subscriber.resource_id)
+            .where('auth_user_id', '=', auth_user_id)
+            .execute();
+
+        if (!resource) {
+            this.logger.warn(
+                `No resource found when creating subscriber. Data: ${JSON.stringify(resource)}`,
+            );
+            return;
+        }
+
         return db
             .insertInto('subscriber')
             .values(subscriber)

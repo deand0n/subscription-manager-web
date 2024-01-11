@@ -60,10 +60,27 @@ export class BillSubscriberRepository {
             };
         });
 
-        return this.batchCreate(billSubscribers);
+        return this.batchCreate(auth_user_id, billSubscribers);
     }
 
-    async batchCreate(bill_subscriber: BillSubscriberInsertable[]) {
+    async batchCreate(auth_user_id: string, bill_subscriber: BillSubscriberInsertable[]) {
+        for (const bs of bill_subscriber) {
+            const bill = await db
+                .selectFrom('bill')
+                .select(['id'])
+                .innerJoin('resource', 'resource.id', 'bill.resource_id')
+                .where('bill.id', '=', bs.bill_id)
+                .where('auth_user_id', '=', auth_user_id)
+                .execute();
+
+            if (!bill) {
+                this.logger.warn(
+                    `No bill found when creating bill_subscriber. Data: ${JSON.stringify(bill)}`,
+                );
+                return;
+            }
+        }
+
         return db.insertInto('bill_subscriber').values(bill_subscriber).executeTakeFirstOrThrow();
     }
 }

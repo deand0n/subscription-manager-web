@@ -87,6 +87,8 @@ export const actions = {
         };
     },
     subscriberTableCreate: async (event) => {
+        const auth_user_id = await getAuthUserIdFromCookies(event.cookies, event.locals.auth);
+
         const formData = await event.request.formData();
         const data = JSON.parse(formData.get('data') as string);
         console.log(data);
@@ -98,7 +100,7 @@ export const actions = {
             };
         }
 
-        const result = await subscriberRepository.create(data);
+        const result = await subscriberRepository.create(auth_user_id, data);
 
         return {
             ...result,
