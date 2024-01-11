@@ -10,7 +10,7 @@ import type { Resource } from '../../@types/resource';
 import { addMonths, addYears, subMonths, subYears } from 'date-fns';
 
 export class ResourceRepository {
-    async findById(id: number, lazy = true): Promise<Resource | undefined> {
+    async findById(auth_user_id: string, id: number, lazy = true): Promise<Resource | undefined> {
         return db
             .selectFrom('resource')
             .selectAll()
@@ -34,6 +34,7 @@ export class ResourceRepository {
 
             .where('resource.id', '=', id)
             .where('resource.deleted_at', 'is', null)
+            .where('resource.auth_user_id', '=', auth_user_id)
             .executeTakeFirst();
     }
 
@@ -60,7 +61,7 @@ export class ResourceRepository {
 
         const bill = await db
             .selectFrom('bill')
-            .selectAll()
+            .select(['id'])
             .where('bill.resource_id', '=', id)
             .where('bill.deleted_at', 'is', null)
             .where('bill.created_at', '>=', lowerBoundary)
@@ -70,7 +71,7 @@ export class ResourceRepository {
         return !!bill;
     }
 
-    getAll(lazy = true): Promise<Resource[]> {
+    getAll(auth_user_id: string, lazy = true): Promise<Resource[]> {
         return db
             .selectFrom('resource')
             .selectAll()
@@ -92,14 +93,15 @@ export class ResourceRepository {
                 ]),
             )
             .where('deleted_at', 'is', null)
+            .where('resource.auth_user_id', '=', auth_user_id)
             .execute();
     }
 
-    create(Resource: ResourceInsertable): Promise<Resource | undefined> {
-        return db.insertInto('resource').values(Resource).returningAll().executeTakeFirstOrThrow();
+    create(resource: ResourceInsertable): Promise<Resource | undefined> {
+        return db.insertInto('resource').values(resource).returningAll().executeTakeFirstOrThrow();
     }
 
-    update(id: number, updateWith: ResourceUpdateable) {
+    update(auth_user_id: string, id: number, updateWith: ResourceUpdateable) {
         return db
             .updateTable('resource')
             .set({
@@ -111,10 +113,12 @@ export class ResourceRepository {
                 telegram_group_id: updateWith.telegram_group_id,
             })
             .where('id', '=', id)
+            .where('deleted_at', 'is', null)
+            .where('resource.auth_user_id', '=', auth_user_id)
             .execute();
     }
 
-    batchDelete(updateWith: ResourceUpdateable[]) {
+    batchDelete(auth_user_id: string, updateWith: ResourceUpdateable[]) {
         return db.transaction().execute(async (transaction) => {
             const promises: Promise<UpdateResult[]>[] = [];
 
@@ -129,19 +133,13 @@ export class ResourceRepository {
                         .updateTable('resource')
                         .set({ deleted_at: resource.deleted_at })
                         .where('id', '=', resource.id)
+                        .where('deleted_at', 'is', null)
+                        .where('resource.auth_user_id', '=', auth_user_id)
                         .execute(),
                 );
             }
 
             return await Promise.all(promises);
         });
-    }
-
-    delete(id: number) {
-        return db
-            .updateTable('resource')
-            .set({ deleted_at: new Date().toISOString() })
-            .where('id', '=', id)
-            .executeTakeFirst();
     }
 }

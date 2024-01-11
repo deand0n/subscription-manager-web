@@ -1,13 +1,17 @@
 import { error } from '@sveltejs/kit';
 import { parseResourceFromForm } from '../../../lib/helpers/parseResourcesFromForm';
 import type { Actions, PageServerLoad } from './$types';
-import { subscriberRepository, userRepository } from '../../../lib/serviceLocator';
-import { ResourceService } from '../../../lib/server/services/resource.service';
-
-const resourceService = new ResourceService();
+import {
+    resourceRepository,
+    subscriberRepository,
+    userRepository,
+} from '../../../lib/serviceLocator';
+import { getAuthUserIdFromCookies } from '../../../lib/server/helpers/getAuthUserFromCookies';
 
 export const load: PageServerLoad = async (event) => {
-    const resource = await resourceService.findById(+event.params.id, false);
+    const auth_user_id = await getAuthUserIdFromCookies(event.cookies, event.locals.auth);
+
+    const resource = await resourceRepository.findById(auth_user_id, +event.params.id, false);
 
     if (!resource) {
         error(404, {
@@ -31,6 +35,7 @@ export const load: PageServerLoad = async (event) => {
 
 export const actions = {
     update: async (event) => {
+        const auth_user_id = await getAuthUserIdFromCookies(event.cookies, event.locals.auth);
         const data = await event.request.formData();
 
         const result = parseResourceFromForm(data);
@@ -39,7 +44,7 @@ export const actions = {
             return { success: false, message: 'Some values were not provided' };
         }
 
-        await resourceService.update(+event.params.id, result.data);
+        await resourceRepository.update(auth_user_id, +event.params.id, result.data);
 
         return { success: true };
     },

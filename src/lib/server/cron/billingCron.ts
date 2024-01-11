@@ -1,40 +1,55 @@
 import { createLogger } from '../../logger/logger';
-import { resourceService, billRepository, billSubscriberRepository } from '../../serviceLocator';
+import {
+    resourceRepository,
+    billRepository,
+    billSubscriberRepository,
+    authUserRepository,
+} from '../../serviceLocator';
 import { bot } from '../telegram/bot';
 
 export const checkBilling = async () => {
     const logger = createLogger('BillingCron');
 
-    const resources = await resourceService.getAll();
+    const auth_users = await authUserRepository.getAll();
+    logger.log(`Retrieved auth_users. Length: ${auth_users.length}`);
 
-    for (const resource of resources) {
-        const isBilled = await resourceService.isBilled(
-            resource.id,
-            resource.billing_start,
-            resource.frequency,
-        );
+    for (const auth_user of auth_users) {
+        const resources = await resourceRepository.getAll(auth_user.id);
 
-        if (isBilled) {
-            logger.log(`Cannot bill. Resource with id: ${resource.id} was already billed`);
-            continue;
-        }
+        for (const resource of resources) {
+            const isBilled = await resourceRepository.isBilled(
+                resource.id,
+                resource.billing_start,
+                resource.frequency,
+            );
 
-        const bill = await billRepository.create({
-            full_amount: resource.price,
-            resource_id: resource.id,
-        });
-        logger.log(`Bill id: ${bill.id} was created for resource id: ${resource.id}`);
+            if (isBilled) {
+                logger.log(`Cannot bill. Resource with id: ${resource.id} was already billed`);
+                continue;
+            }
 
-        await billSubscriberRepository.createFromBill(bill);
+            const bill = await billRepository.create({
+                full_amount: resource.price,
+                resource_id: resource.id,
+            });
+            logger.log(`Bill id: ${bill.id} was created for resource id: ${resource.id}`);
 
-        logger.log(
-            `Bills for subscribers was created for resource. resource_id: ${resource.id}, bill_id: ${bill.id}`,
-        );
+            await billSubscriberRepository.createFromBill(bill);
 
-        const billSubscribers = await billSubscriberRepository.findByBillId(bill.id);
+            logger.log(
+                `Bills for subscribers was created for resource. resource_id: ${resource.id}, bill_id: ${bill.id}`,
+            );
 
-        if (resource.telegram_group_id) {
-            bot.writeBillMessage(resource.telegram_group_id, resource.name, bill, billSubscribers);
+            const billSubscribers = await billSubscriberRepository.findByBillId(bill.id);
+
+            if (resource.telegram_group_id) {
+                bot.writeBillMessage(
+                    resource.telegram_group_id,
+                    resource.name,
+                    bill,
+                    billSubscribers,
+                );
+            }
         }
     }
 };
