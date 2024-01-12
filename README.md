@@ -50,3 +50,33 @@ npm run build
 ```
 
 You can preview the production build with `npm run preview`.
+
+## Deploy
+
+### Build docker image
+
+```bash
+docker-compose build --no-cache
+```
+
+### Run docker container
+
+```bash
+docker-compose up
+```
+
+### Run migrations
+
+#### Find container id
+
+```bash
+docker ps
+```
+
+#### Inject sh into container
+
+```bash
+docker exec -t -i ID /bin/sh
+
+> npm run migrate:up
+```

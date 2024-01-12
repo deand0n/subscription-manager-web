@@ -5,10 +5,10 @@ import type { Database } from './src/lib/database.types';
 
 export const pool = new Pool({
     database: import.meta.env.VITE_DB_DATABASE,
-    host: import.meta.env.VITE_DB_HOST,
     user: import.meta.env.VITE_DB_USER,
     password: import.meta.env.VITE_DB_PASSWORD,
-    port: import.meta.env.VITE_DB_PORT,
+    host: 'db',
+    port: 5432,
     max: 10,
 });
 

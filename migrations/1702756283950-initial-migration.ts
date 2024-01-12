@@ -1,6 +1,39 @@
 import { Kysely, sql } from 'kysely';
 
 export async function up(db: Kysely<unknown>): Promise<void> {
+    // lucia
+    await db.schema
+        .createTable('auth_user')
+        .addColumn('id', 'varchar(100)', (col) => col.primaryKey())
+        .addColumn('username', 'varchar(500)', (col) => col.unique())
+
+        .addColumn('created_at', 'timestamp', (col) => col.defaultTo(sql`now()`).notNull())
+        .addColumn('deleted_at', 'timestamp')
+        .execute();
+
+    await db.schema
+        .createTable('auth_user_key')
+        .addColumn('id', 'varchar(100)', (col) => col.primaryKey())
+        .addColumn('hashed_password', 'varchar')
+
+        .addColumn('created_at', 'timestamp', (col) => col.defaultTo(sql`now()`).notNull())
+        .addColumn('deleted_at', 'timestamp')
+
+        .addColumn('user_id', 'varchar(100)', (col) => col.references('auth_user.id').notNull())
+        .execute();
+
+    await db.schema
+        .createTable('auth_user_session')
+        .addColumn('id', 'varchar(100)', (col) => col.primaryKey())
+        .addColumn('active_expires', 'int8')
+        .addColumn('idle_expires', 'int8')
+
+        .addColumn('created_at', 'timestamp', (col) => col.defaultTo(sql`now()`).notNull())
+        .addColumn('deleted_at', 'timestamp')
+
+        .addColumn('user_id', 'varchar(100)', (col) => col.references('auth_user.id').notNull())
+        .execute();
+
     await db.schema
         .createTable('user')
         .addColumn('id', 'serial', (col) => col.primaryKey())
@@ -71,39 +104,6 @@ export async function up(db: Kysely<unknown>): Promise<void> {
 
         .addColumn('bill_id', 'integer', (col) => col.references('bill.id').notNull())
         .addColumn('subscriber_id', 'integer', (col) => col.references('subscriber.id').notNull())
-        .execute();
-
-    // lucia
-    await db.schema
-        .createTable('auth_user')
-        .addColumn('id', 'varchar(100)', (col) => col.primaryKey())
-        .addColumn('username', 'varchar(500)', (col) => col.unique())
-
-        .addColumn('created_at', 'timestamp', (col) => col.defaultTo(sql`now()`).notNull())
-        .addColumn('deleted_at', 'timestamp')
-        .execute();
-
-    await db.schema
-        .createTable('auth_user_key')
-        .addColumn('id', 'varchar(100)', (col) => col.primaryKey())
-        .addColumn('hashed_password', 'varchar')
-
-        .addColumn('created_at', 'timestamp', (col) => col.defaultTo(sql`now()`).notNull())
-        .addColumn('deleted_at', 'timestamp')
-
-        .addColumn('user_id', 'varchar(100)', (col) => col.references('auth_user.id').notNull())
-        .execute();
-
-    await db.schema
-        .createTable('auth_user_session')
-        .addColumn('id', 'varchar(100)', (col) => col.primaryKey())
-        .addColumn('active_expires', 'int8')
-        .addColumn('idle_expires', 'int8')
-
-        .addColumn('created_at', 'timestamp', (col) => col.defaultTo(sql`now()`).notNull())
-        .addColumn('deleted_at', 'timestamp')
-
-        .addColumn('user_id', 'varchar(100)', (col) => col.references('auth_user.id').notNull())
         .execute();
 }
 
