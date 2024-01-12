@@ -2,7 +2,7 @@
     "name": "subscription-manager",
     "version": "0.0.1",
     "scripts": {
-        "dev": "vite dev --port 5111",
+        "dev": "vite dev",
         "build": "vite build",
         "preview": "vite preview",
         "test": "npm run test:integration && npm run test:unit",

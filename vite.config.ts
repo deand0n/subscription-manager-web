@@ -1,9 +1,17 @@
 import { sveltekit } from '@sveltejs/kit/vite';
+import { loadEnv } from 'vite';
 import { defineConfig } from 'vitest/config';
 
-export default defineConfig({
-    plugins: [sveltekit()],
-    test: {
-        include: ['src/**/*.{test,spec}.{js,ts}'],
-    },
+export default defineConfig(({ mode }) => {
+    process.env = { ...process.env, ...loadEnv(mode, process.cwd()) };
+
+    return {
+        server: {
+            port: +(process.env.VITE_APP_PORT ?? 5173),
+        },
+        plugins: [sveltekit()],
+        test: {
+            include: ['src/**/*.{test,spec}.{js,ts}'],
+        },
+    };
 });

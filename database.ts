@@ -7,7 +7,7 @@ export const pool = new Pool({
     database: import.meta.env.VITE_DB_DATABASE,
     user: import.meta.env.VITE_DB_USER,
     password: import.meta.env.VITE_DB_PASSWORD,
-    host: 'db',
+    host: import.meta.env.VITE_DB_HOST,
     port: 5432,
     max: 10,
 });
