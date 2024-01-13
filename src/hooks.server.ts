@@ -11,7 +11,7 @@ const getTheme = (cookies: Cookies) => {
     if (cookieTheme) {
         theme = cookieTheme;
     } else {
-        cookies.set('theme', 'skeleton', { path: '/', secure: false });
+        cookies.set('theme', 'skeleton', { path: '/' });
         theme = 'skeleton';
     }
 
