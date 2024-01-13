@@ -1,35 +1,35 @@
 version: '3.9'
 services:
-    web:
-        build:
-            context: ./
-            dockerfile: Dockerfile
-        restart: always
-        ports:
-            - ${VITE_APP_PORT}:3000
-        env_file:
-            - .env
-        links:
-            - 'db:database'
-        depends_on:
-            - db
+  web:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - ${VITE_APP_PORT}:3000
+    env_file:
+      - .env
+    links:
+      - 'db:database'
+    depends_on:
+      - db
 
-    db:
-        image: postgres:16.1
-        restart: always
-        env_file:
-            - .env
-        ports:
-            - ${VITE_DB_PORT}:5432
-        expose:
-            - ${VITE_DB_PORT}
-        environment:
-            POSTGRES_DB: ${VITE_DB_DATABASE}
-            POSTGRES_USER: ${VITE_DB_USER}
-            POSTGRES_PASSWORD: ${VITE_DB_PASSWORD}
-        volumes:
-            - db:/var/lib/postgresql/data
+  db:
+    image: postgres:16.1
+    restart: always
+    env_file:
+      - .env
+    ports:
+      - ${VITE_DB_PORT}:5432
+    expose:
+      - ${VITE_DB_PORT}
+    environment:
+      POSTGRES_DB: ${VITE_DB_DATABASE}
+      POSTGRES_USER: ${VITE_DB_USER}
+      POSTGRES_PASSWORD: ${VITE_DB_PASSWORD}
+    volumes:
+      - db:/var/lib/postgresql/data
 
 volumes:
-    db:
-        driver: local
+  db:
+    driver: local
