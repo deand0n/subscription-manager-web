@@ -7,7 +7,7 @@ export default defineConfig(({ mode }) => {
 
     return {
         server: {
-            port: +(process.env.VITE_APP_PORT ?? 5173),
+            port: +(process.env.APP_PORT ?? 5173),
         },
         plugins: [sveltekit()],
         test: {
