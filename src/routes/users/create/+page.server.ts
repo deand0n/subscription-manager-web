@@ -1,6 +1,6 @@
 import type { Actions } from '../$types';
-import { getAuthUserIdFromCookies } from '../../../lib/server/helpers/getAuthUserFromCookies';
-import { userRepository } from '../../../lib/serviceLocator';
+import { getAuthUserIdFromCookies } from '$lib/server/helpers/getAuthUserFromCookies';
+import { userRepository } from '$lib/serviceLocator';
 
 export const actions = {
     default: async (event) => {

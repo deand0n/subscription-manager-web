@@ -1,6 +1,6 @@
 <script lang="ts">
     import { onDestroy } from 'svelte';
-    import { breadcrumbs } from '../../routes/store';
+    import { breadcrumbs } from '../store/store';
 
     export let breadcrumb: { label: string; link: string };
 

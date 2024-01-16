@@ -1,8 +1,8 @@
 import { error } from '@sveltejs/kit';
-import { parseUserFromForm } from '../../../lib/helpers/parseUserFromForm';
+import { parseUserFromForm } from '$lib/helpers/parseUserFromForm';
 import type { Actions, PageServerLoad } from './$types';
-import { userRepository } from '../../../lib/serviceLocator';
-import { getAuthUserIdFromCookies } from '../../../lib/server/helpers/getAuthUserFromCookies';
+import { userRepository } from '$lib/serviceLocator';
+import { getAuthUserIdFromCookies } from '$lib/server/helpers/getAuthUserFromCookies';
 
 export const load: PageServerLoad = async (event) => {
     const auth_user_id = await getAuthUserIdFromCookies(event.cookies, event.locals.auth);

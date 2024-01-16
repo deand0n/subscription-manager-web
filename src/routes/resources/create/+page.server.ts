@@ -1,7 +1,7 @@
 import type { Actions } from '../$types';
-import { parseResourceFromForm } from '../../../lib/helpers/parseResourcesFromForm';
-import { getAuthUserIdFromCookies } from '../../../lib/server/helpers/getAuthUserFromCookies';
-import { userRepository, resourceRepository } from '../../../lib/serviceLocator';
+import { parseResourceFromForm } from '$lib/helpers/parseResourcesFromForm';
+import { getAuthUserIdFromCookies } from '$lib/server/helpers/getAuthUserFromCookies';
+import { userRepository, resourceRepository } from '$lib/serviceLocator';
 import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async (event) => {

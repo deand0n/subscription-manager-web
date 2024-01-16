@@ -3,7 +3,7 @@
     export let form: ActionData;
 </script>
 
-<div>
+<div class="card p-5">
     <form class="form flex flex-col gap-4" method="post">
         <div class="flex flex-col">
             <label for="first_name" class="block"> First Name </label>
@@ -22,11 +22,11 @@
             <input class="input" name="telegram_user_id" />
         </div>
         <button class="btn btn-md variant-filled-primary">Submit</button>
-    </form>
 
-    {#if form?.success}
-        <p>success</p>
-    {:else if form && !form.success}
-        <p>Error: {form.message}</p>
-    {/if}
+        {#if form?.success}
+            <p>success</p>
+        {:else if form && !form.success}
+            <p>Error: {form.message}</p>
+        {/if}
+    </form>
 </div>

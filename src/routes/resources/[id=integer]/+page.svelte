@@ -1,9 +1,9 @@
 <script lang="ts">
     import { getModalStore, type ModalSettings } from '@skeletonlabs/skeleton';
-    import type { Subscriber } from '../../../lib/@types/subscriber';
-    import Table from '../../../lib/components/Table.svelte';
+    import type { Subscriber } from '$lib/@types/subscriber';
+    import Table from '$lib/components/Table.svelte';
     import type { ActionData, PageData } from './$types';
-    import { getPricePerSubscriber } from '../../../lib/helpers/getPricePerSubscriber';
+    import { getPricePerSubscriber } from '$lib/helpers/getPricePerSubscriber';
 
     export let data: PageData;
     export let form: ActionData;

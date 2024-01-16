@@ -1,7 +1,7 @@
 import pkg from 'pg';
 const { Pool } = pkg;
 import { Kysely, PostgresDialect } from 'kysely';
-import type { Database } from './src/lib/database.types';
+import type { Database } from '$lib/database.types';
 
 export const pool = new Pool({
     database: import.meta.env.VITE_DB_DATABASE,

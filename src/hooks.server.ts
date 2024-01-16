@@ -1,5 +1,5 @@
 import type { Cookies, Handle } from '@sveltejs/kit';
-import { startCronJobs } from './lib/server/cron/cron';
+import { startCronJobs } from '$lib/server/cron/cron';
 import { auth } from '$lib/server/lucia';
 
 process.env.TZ = 'UTC';

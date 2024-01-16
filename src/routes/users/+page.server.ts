@@ -1,5 +1,5 @@
-import { getAuthUserIdFromCookies } from '../../lib/server/helpers/getAuthUserFromCookies';
-import { userRepository } from '../../lib/serviceLocator';
+import { getAuthUserIdFromCookies } from '$lib/server/helpers/getAuthUserFromCookies';
+import { userRepository } from '$lib/serviceLocator';
 import type { Actions, PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async (event) => {

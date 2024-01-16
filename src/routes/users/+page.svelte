@@ -1,8 +1,8 @@
 <script lang="ts">
     import { goto } from '$app/navigation';
     import { page } from '$app/stores';
-    import type { User } from '../../lib/@types/user';
-    import Table from '../../lib/components/Table.svelte';
+    import type { User } from '$lib/@types/user';
+    import Table from '$lib/components/Table.svelte';
     import type { PageData } from './$types';
 
     export let data: PageData;
