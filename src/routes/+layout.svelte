@@ -18,11 +18,9 @@
     import CreateSubscriberModal from '$lib/modals/subscriber/CreateSubscriberModal.svelte';
     import EditSubscriberModal from '$lib/modals/subscriber/EditSubscriberModal.svelte';
 
-    function setBodyThemeAttribute(): void {
-        if (!browser) return;
+    if (browser) {
         document.body.setAttribute('data-theme', $theme);
     }
-    setBodyThemeAttribute();
 
     storePopup.set({ computePosition, autoUpdate, offset, shift, flip, arrow });
     initializeStores();
@@ -52,11 +50,11 @@
             <AppRailAnchor
                 href="/resources"
                 selected={$page.url.pathname.includes('/resources')}
-                title="Resources"
+                title="Subscriptions"
             >
                 <div class="flex flex-col">
                     <span class="material-symbols-outlined"> shop </span>
-                    Resources
+                    Subs
                 </div>
             </AppRailAnchor>
             <AppRailAnchor

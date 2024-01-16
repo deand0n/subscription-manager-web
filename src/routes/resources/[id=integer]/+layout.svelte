@@ -5,7 +5,7 @@
     const { id } = $page.params;
 
     const breadcrumb = {
-        label: `Resource ID: ${id}`,
+        label: `Subscription ID: ${id}`,
         link: `/resources/${id}`,
     };
 </script>
