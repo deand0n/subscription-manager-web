@@ -21,4 +21,9 @@ export class BillRepository {
 
         return db.insertInto('bill').values(bill).returningAll().executeTakeFirstOrThrow();
     }
+
+    async getAll(): Promise<Bill[]> {
+        const bills = await db.selectFrom('bill').selectAll().innerJoin('bill_subscriber', 'bill.id', 'bill_subscriber.bill_id').execute();
+        return bills;
+    }
 }
