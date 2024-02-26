@@ -9,6 +9,8 @@ RUN npm run build
 
 RUN rm -rf src/ static/ docker-compose.yml
 
+RUN npm run migrate:up
+
 # USER node:node
 EXPOSE 3000
 
